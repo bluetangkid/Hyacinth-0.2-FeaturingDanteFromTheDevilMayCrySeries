@@ -36,7 +36,9 @@ public class Player extends DynamicEntity {
             this.getBody().applyLinearImpulse(Constants.PLAYER_IMPULSE_MUL, 0, pos.x, pos.y, true);
             this.capSpeed(Constants.PLAYER_MAX_SPEED);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.W)){
+        if((Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.W)) && onGround){
+            this.getBody().setTransform(pos.x, pos.y + 10, 0);
+            this.getBody().applyTorque(100, true);
             this.getBody().applyLinearImpulse(0, Constants.PLAYER_JUMP_FORCE*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)){
@@ -47,7 +49,7 @@ public class Player extends DynamicEntity {
             System.out.println((Gdx.input.getX() - Gdx.graphics.getWidth()/2) + " " + (Gdx.input.getY() - Gdx.graphics.getHeight()/2));
             this.getBody().applyLinearImpulse(gunForce.x, gunForce.y, pos.x, pos.y, true);
         }
-        groundCheck.setTransform(pos.x, pos.y - Constants.PLAYER_RADIUS - 5, 0);
+        groundCheck.setTransform(pos.x, pos.y - Constants.PLAYER_RADIUS - 1, 0);
         //System.out.println(onGround);
     }
 
