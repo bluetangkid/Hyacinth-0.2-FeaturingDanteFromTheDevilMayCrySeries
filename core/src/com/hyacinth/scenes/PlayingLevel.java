@@ -128,18 +128,24 @@ public class PlayingLevel {
     }
 
     private void createGun(MapProperties properties) {
-        int bulletCount = 1;
-        float bulletSpread = 0f, bulletForce = 1f;
-        if(properties.containsKey("gun1bulletcount")){
-            bulletCount = (int)properties.get("gun1bulletcount");
+        int bulletCount = 1, clipSize = 6;
+        float bulletSpread = 0f, bulletForce = 1f, reloadTime = 1f;
+        if(properties.containsKey("gunbulletcount")){
+            bulletCount = (int)properties.get("gunbulletcount");
         }
-        if(properties.containsKey("gun1bulletspread")){
-            bulletSpread = (float)properties.get("gun1bulletspread");
+        if(properties.containsKey("gunbulletspread")){
+            bulletSpread = (float)properties.get("gunbulletspread");
         }
-        if(properties.containsKey("gun1bulletforce")){
-            bulletForce = (float)properties.get("gun1bulletforce");
+        if(properties.containsKey("gunbulletforce")){
+            bulletForce = (float)properties.get("gunbulletforce");
         }
-        player.createGun(bulletCount, bulletSpread, bulletForce);
+        if(properties.containsKey("gunclip")){
+            clipSize = (int)properties.get("gunclip");
+        }
+        if(properties.containsKey("gunreload")){
+            reloadTime = (float)properties.get("gunreload");
+        }
+        player.createGun(bulletCount, bulletSpread, bulletForce, clipSize, reloadTime);
     }
 }
 
@@ -154,7 +160,7 @@ class GroundListener implements ContactListener {
     public void beginContact(Contact contact) {
         if((contact.getFixtureA().isSensor() && contact.getFixtureB().getBody().getType() == BodyDef.BodyType.StaticBody) ||
                 (contact.getFixtureB().isSensor() && contact.getFixtureA().getBody().getType() == BodyDef.BodyType.StaticBody)){
-            world.setPlayerGround(-1);
+            world.setPlayerGround(1);
         }
     }
 
@@ -162,7 +168,7 @@ class GroundListener implements ContactListener {
     public void endContact(Contact contact) {
         if((contact.getFixtureA().isSensor() && contact.getFixtureB().getBody().getType() == BodyDef.BodyType.StaticBody) ||
                 (contact.getFixtureB().isSensor() && contact.getFixtureA().getBody().getType() == BodyDef.BodyType.StaticBody)){
-            world.setPlayerGround(1);
+            world.setPlayerGround(-1);
         }
     }
 

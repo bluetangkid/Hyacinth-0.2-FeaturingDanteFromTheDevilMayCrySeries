@@ -37,7 +37,8 @@ public class Player extends DynamicEntity {
             this.getBody().applyLinearImpulse(Constants.PLAYER_IMPULSE_MUL, 0, pos.x, pos.y, true);
             this.capSpeed(Constants.PLAYER_MAX_SPEED);
         }
-        if((Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.W)) && onGround > 0 && jumpTimer == 0){
+        System.out.println(this.onGround);
+        if((Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.W)) && this.onGround > 0 && this.jumpTimer == 0){
             this.getBody().setTransform(pos.x, pos.y + 1, 0);
             this.getBody().applyLinearImpulse(0, Constants.PLAYER_JUMP_FORCE*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
             jumpTimer = 20;
@@ -50,9 +51,10 @@ public class Player extends DynamicEntity {
             //System.out.println((Gdx.input.getX() - Gdx.graphics.getWidth()/2) + " " + (Gdx.input.getY() - Gdx.graphics.getHeight()/2));
             this.getBody().applyLinearImpulse(gunForce.x, gunForce.y, pos.x, pos.y, true);
         }
-        groundCheck.setTransform(pos.x, pos.y - Constants.PLAYER_RADIUS - 1, 0);
+        groundCheck.setTransform(pos.x, pos.y - (Constants.PLAYER_RADIUS/2), 0);
         //System.out.println(onGround);
-        if(jumpTimer > 0) jumpTimer--;
+        if(this.jumpTimer > 0) this.jumpTimer--;
+        this.gun.update();
     }
 
     public void draw() {
@@ -72,7 +74,7 @@ public class Player extends DynamicEntity {
     public void addGround(int bruh){
         this.onGround += bruh;
     }
-    public void createGun(int bulletCount, float bulletSpread, float bulletForce){
-        this.gun = new Gun(body.getWorld(), bulletCount, bulletSpread, bulletForce);
+    public void createGun(int bulletCount, float bulletSpread, float bulletForce, int clipSize, float reloadTime){
+        this.gun = new Gun(body.getWorld(), bulletCount, bulletSpread, bulletForce, clipSize, reloadTime);
     }
 }
