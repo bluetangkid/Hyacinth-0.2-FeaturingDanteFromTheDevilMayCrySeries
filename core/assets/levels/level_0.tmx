@@ -2,6 +2,15 @@
 <map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="64" height="36" tilewidth="16" tileheight="16" infinite="0" nextlayerid="2" nextobjectid="1">
  <tileset firstgid="1" source="../textures/text_texturemap.tsx"/>
  <layer id="1" name="Tile Layer 1" width="64" height="36">
+  <properties>
+   <property name="gun1ammo" type="int" value="5"/>
+   <property name="gun1bulletcount" type="int" value="10"/>
+   <property name="gun1bulletforce" type="float" value="1"/>
+   <property name="gun1bulletspread" type="float" value="20"/>
+   <property name="gun1name" value="Shotgun"/>
+   <property name="spawnX" type="int" value="32"/>
+   <property name="spawnY" type="int" value="32"/>
+  </properties>
   <data encoding="csv">
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,

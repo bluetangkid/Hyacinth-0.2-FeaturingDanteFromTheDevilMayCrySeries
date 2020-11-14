@@ -6,7 +6,7 @@ public class Constants {
     public static float GUN_FORCE_STATIC_MULT = 5000f;
     public static float PLAYER_DENSITY = 0.5f;
     public static float PLAYER_RADIUS = 10f;
-    public static float PLAYER_FRICTION = 0.5f;
+    public static float PLAYER_FRICTION = 0.8f;
     public static float PLAYER_RESTITUTION = 0.05f;
     public static float PLAYER_JUMP_FORCE = 2f;
     public static float PLAYER_IMPULSE_MUL = 5000f;

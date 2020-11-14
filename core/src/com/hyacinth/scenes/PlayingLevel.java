@@ -3,6 +3,7 @@ package com.hyacinth.scenes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -29,8 +30,12 @@ public class PlayingLevel {
     public PlayingLevel(OrthographicCamera camera, TiledMap map){
         this.map = map;
         world = new World(new Vector2(0, -Constants.GRAVITY), true);
+        tiledBoxToBodies(map, world, "Tile Layer 1");
+        MapProperties properties = map.getLayers().get("Tile Layer 1").getProperties();
+        Vector2 spawn = this.getSpawnLocation(properties);
         debugRenderer = new Box2DDebugRenderer();
-        player = new Player(world);
+        player = new Player(world, spawn);
+        this.createGun(properties);
         timeStep = 1f/ Gdx.graphics.getDisplayMode().refreshRate;
         BodyDef groundBodyDef = new BodyDef();
         groundBodyDef.position.set(new Vector2(0, -70));
@@ -42,7 +47,6 @@ public class PlayingLevel {
         world.setContactListener(new GroundListener(this));
         world.setContactFilter(new BulletFilter());
         mapRenderer = new OrthogonalTiledMapRenderer(map);//TODO this might need to be passed in with the map to render
-        tiledBoxToBodies(map, world, "layer1");
     }
 
     public void render(OrthographicCamera camera, TiledMapRenderer renderer){
@@ -114,6 +118,28 @@ public class PlayingLevel {
 
     public void setPlayerGround(int bruh){
         player.addGround(bruh);
+    }
+
+    public Vector2 getSpawnLocation(MapProperties properties){
+        if(properties.containsKey("spawnX") && properties.containsKey("spawnY")){
+            return new Vector2((int)properties.get("spawnX"), (int)properties.get("spawnY"));
+        }
+        return new Vector2();
+    }
+
+    private void createGun(MapProperties properties) {
+        int bulletCount = 1;
+        float bulletSpread = 0f, bulletForce = 1f;
+        if(properties.containsKey("gun1bulletcount")){
+            bulletCount = (int)properties.get("gun1bulletcount");
+        }
+        if(properties.containsKey("gun1bulletspread")){
+            bulletSpread = (float)properties.get("gun1bulletspread");
+        }
+        if(properties.containsKey("gun1bulletforce")){
+            bulletForce = (float)properties.get("gun1bulletforce");
+        }
+        player.createGun(bulletCount, bulletSpread, bulletForce);
     }
 }
 

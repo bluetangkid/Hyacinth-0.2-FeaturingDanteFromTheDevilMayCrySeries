@@ -8,14 +8,15 @@ import java.util.ArrayList;
 //for his neutral special, he wields a
 public class Gun {
     World world;
-    float bullet_count, bullet_force, bullet_spread;
+    int bulletCount;
+    float bulletForce, bulletSpread;
     ArrayList<Bullet> bullets;
-    public Gun(World w){
-        //TODO: what are we inputting? bullet count, spread, force for each bullet? repeats? im just gonna put test variables here for now
+    public Gun(World w, int bulletCount, float bulletSpread, float bulletForce){
+        //TODO: repeater firing?
         this.world = w;
-        this.bullet_count = 10;
-        this.bullet_spread = 20f;
-        this.bullet_force = .2f;
+        this.bulletCount = bulletCount;
+        this.bulletSpread = bulletSpread;
+        this.bulletForce = bulletForce;
         this.bullets = new ArrayList<>();
     }
     public Vector2 fireGun(Vector2 direction, Vector2 position) {
@@ -25,12 +26,12 @@ public class Gun {
         Vector2 forceCenterDirection = new Vector2(-direction.x, direction.y).nor();
         //create some bullets and counter-forces, sum them up
         Vector2 bullets_total_force = new Vector2();
-        for (int i = 0; i < bullet_count; i++) {
-            float spread = ((float) Math.random() * this.bullet_spread) - (this.bullet_spread / 2);
+        for (int i = 0; i < bulletCount; i++) {
+            float spread = ((float) Math.random() * this.bulletSpread) - (this.bulletSpread / 2);
             Vector2 centerClone = new Vector2(forceCenterDirection);
             //System.out.println(spread);
             Vector2 thisDirection = centerClone.rotateDeg(spread);
-            Vector2 thisForce = new Vector2(thisDirection).scl(this.bullet_force);
+            Vector2 thisForce = new Vector2(thisDirection).scl(this.bulletForce);
             bullets_total_force.add(thisForce);
             //then make the bullet for real
             this.bullets.add(new Bullet(this.world,
