@@ -14,7 +14,6 @@ public class Player extends DynamicEntity {
     public Player(World world, Vector2 spawn){
         super(world, Constants.PLAYER_RESTITUTION, Constants.PLAYER_RADIUS, Constants.PLAYER_DENSITY, Constants.PLAYER_FRICTION, spawn);
         this.getBody().setFixedRotation(true);
-        this.gun = new Gun(world);
         BodyDef def = new BodyDef();
         def.position.set(this.getBody().getPosition());
         def.type = BodyDef.BodyType.DynamicBody;

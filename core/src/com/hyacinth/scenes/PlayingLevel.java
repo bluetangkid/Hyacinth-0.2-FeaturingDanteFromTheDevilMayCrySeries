@@ -76,7 +76,7 @@ public class PlayingLevel {
     }
 
     private void doPhysicsStep(float deltaTime) {
-        float frameTime = Math.min(deltaTime, 0.25f);
+        float frameTime = Math.min(deltaTime, 0.25f * 60f/Gdx.graphics.getDisplayMode().refreshRate);
         accumulator += frameTime;
         time = System.currentTimeMillis();
         while (accumulator >= timeStep) {
@@ -154,7 +154,7 @@ class GroundListener implements ContactListener {
     public void beginContact(Contact contact) {
         if((contact.getFixtureA().isSensor() && contact.getFixtureB().getBody().getType() == BodyDef.BodyType.StaticBody) ||
                 (contact.getFixtureB().isSensor() && contact.getFixtureA().getBody().getType() == BodyDef.BodyType.StaticBody)){
-            world.setPlayerGround(1);
+            world.setPlayerGround(-1);
         }
     }
 
@@ -162,7 +162,7 @@ class GroundListener implements ContactListener {
     public void endContact(Contact contact) {
         if((contact.getFixtureA().isSensor() && contact.getFixtureB().getBody().getType() == BodyDef.BodyType.StaticBody) ||
                 (contact.getFixtureB().isSensor() && contact.getFixtureA().getBody().getType() == BodyDef.BodyType.StaticBody)){
-            world.setPlayerGround(-1);
+            world.setPlayerGround(1);
         }
     }
 
