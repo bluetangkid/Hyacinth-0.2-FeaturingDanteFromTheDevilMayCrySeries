@@ -42,7 +42,7 @@ public class PlayingLevel {
         world.setContactListener(new GroundListener(this));
         world.setContactFilter(new BulletFilter());
         mapRenderer = new OrthogonalTiledMapRenderer(map);//TODO this might need to be passed in with the map to render
-        tiledBoxToBodies(map, world, "Object Layer 1");
+        tiledBoxToBodies(map, world, "layer1");
     }
 
     public void render(OrthographicCamera camera, TiledMapRenderer renderer){
@@ -52,10 +52,8 @@ public class PlayingLevel {
         for (Body b : bodies) {
             DynamicEntity entity = (DynamicEntity) b.getUserData();
             if (entity != null) {
-                //System.out.println(b.getPosition());
                 entity.update();
                 if (entity instanceof Player) {
-                    //System.out.println("Player");
                     playerPosition = entity.getBody().getPosition();
                 }
                 if(!entity.getBody().isActive()){
@@ -83,7 +81,7 @@ public class PlayingLevel {
     }
 
     public void tiledBoxToBodies(TiledMap map, World world, String layer) {
-        TiledMapTileLayer mapLayer = (TiledMapTileLayer)map.getLayers().get("layer1");
+        TiledMapTileLayer mapLayer = (TiledMapTileLayer)map.getLayers().get(layer);
         float tileWidth = map.getProperties().get("tilewidth", Integer.class);
         for (int i = 0; i < mapLayer.getWidth(); i++) {
             for (int j = 0; j < mapLayer.getHeight(); j++) {
@@ -94,6 +92,7 @@ public class PlayingLevel {
                     bodyDef.type = BodyDef.BodyType.StaticBody;
                     Body body = world.createBody(bodyDef);
                     Fixture fixture = body.createFixture(getShapeFromRectangle(rectangle, tileWidth), 0.2f);
+                    fixture.setUserData(true);
                     fixture.setFriction(0.1f);
                     body.setTransform(getTransformedCenterForRectangle(rectangle, map), 0);
                 }
@@ -113,8 +112,8 @@ public class PlayingLevel {
         return center;
     }
 
-    public void setPlayerGround(boolean bruh){
-        player.setGround(bruh);
+    public void setPlayerGround(int bruh){
+        player.addGround(bruh);
     }
 }
 
@@ -127,15 +126,19 @@ class GroundListener implements ContactListener {
 
     @Override
     public void beginContact(Contact contact) {
-        if(contact.getFixtureA().isSensor() || contact.getFixtureB().isSensor()){
-            world.setPlayerGround(false);
+        if((contact.getFixtureA().isSensor() || contact.getFixtureB().isSensor()) &&
+                ((contact.getFixtureA().getUserData() != null && (boolean)contact.getFixtureA().getUserData()) ||
+                        (contact.getFixtureB().getUserData() != null && (boolean)contact.getFixtureB().getUserData()))){
+            world.setPlayerGround(1);
         }
     }
 
     @Override
     public void endContact(Contact contact) {
-        if((contact.getFixtureA().isSensor() || contact.getFixtureB().isSensor()) && !contact.isTouching()){
-            world.setPlayerGround(true);
+        if((contact.getFixtureA().isSensor() || contact.getFixtureB().isSensor()) &&
+                ((contact.getFixtureA().getUserData() != null && (boolean)contact.getFixtureA().getUserData()) ||
+                        (contact.getFixtureB().getUserData() != null && (boolean)contact.getFixtureB().getUserData()))){
+            world.setPlayerGround(-1);
         }
     }
 

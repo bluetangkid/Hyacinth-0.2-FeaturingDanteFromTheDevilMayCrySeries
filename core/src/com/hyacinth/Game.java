@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.Array;
 import com.hyacinth.entities.Constants;
 import com.hyacinth.entities.DynamicEntity;
 import com.hyacinth.entities.Player;
+import com.hyacinth.scenes.LevelSelect;
 import com.hyacinth.scenes.PlayingLevel;
 import com.hyacinth.scenes.Title;
 
@@ -40,6 +41,7 @@ public class Game extends ApplicationAdapter {
 	private Texture cursor;
 	private PlayingLevel[] levels;
 	private TiledRenderer renderer;
+	private LevelSelect levelSelect;
 
 	@Override
 	public void create () {
@@ -52,10 +54,12 @@ public class Game extends ApplicationAdapter {
 
 		title = new Title(generator);
 		cursor = new Texture(Gdx.files.internal("textures/cursor.png"));
-		//todo: can we read how many levels?
-		levels = new PlayingLevel[1];
-		levels[0] = new PlayingLevel(camera, loadMap("levels/test_level.tmx"));
+		levels = new PlayingLevel[(int)Gdx.files.internal("core/assets/levels/").list().length];
+		for (int i = 0; i < levels.length; i++){
+			levels[i] = new PlayingLevel(camera, loadMap("levels/level_" + i + ".tmx"));
+		}
 		renderer = new TiledRenderer();
+		levelSelect = new LevelSelect(generator, levels);
 	}
 
 	@Override
@@ -65,6 +69,12 @@ public class Game extends ApplicationAdapter {
 		camera.update();
 		if(state == GameState.TITLE) {
 			if (title.draw(camera)) {
+				state = GameState.LEVEL_SELECT;
+			}
+		} else if(state == GameState.LEVEL_SELECT){
+			int selection = levelSelect.draw(camera);
+			if (selection > 0){
+				level = selection;
 				state = GameState.GAME;
 			}
 		} else if(state == GameState.GAME){

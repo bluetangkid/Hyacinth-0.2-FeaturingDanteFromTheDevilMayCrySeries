@@ -66,7 +66,7 @@ public class Title {
         scale += scaleDir ? -.003 : .003;
         if(scale < .85 || scale > 1.15) scaleDir = !scaleDir;
 
-        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+        if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             return true;
         }
         return false;
