@@ -55,6 +55,7 @@ public class Game extends ApplicationAdapter {
 		groundBox.setAsBox(camera.viewportWidth, 20.0f);
 		groundBody.createFixture(groundBox, 0.0f);
 		groundBox.dispose();
+		world.setContactListener(new GroundListener(this));
 	}
 
 	@Override
@@ -105,9 +106,45 @@ public class Game extends ApplicationAdapter {
 		camera.position.x = mapWidthInPixels * .5f;
 		camera.position.y = mapHeightInPixels * .3f;
 	}
+
+	public void setPlayerGround(boolean bruh){
+		player.setGround(bruh);
+	}
 	
 	@Override
 	public void dispose () {
 		batch.dispose();
+	}
+}
+
+class GroundListener implements ContactListener {
+	Game world;
+
+	public GroundListener(Game w){
+		this.world = w;
+	}
+
+	@Override
+	public void beginContact(Contact contact) {
+		if(contact.getFixtureA().isSensor() || contact.getFixtureB().isSensor()){
+			world.setPlayerGround(false);
+		}
+	}
+
+	@Override
+	public void endContact(Contact contact) {
+		if((contact.getFixtureA().isSensor() || contact.getFixtureB().isSensor()) && !contact.isTouching()){
+			world.setPlayerGround(true);
+		}
+	}
+
+	@Override
+	public void preSolve(Contact contact, Manifold oldManifold) {
+
+	}
+
+	@Override
+	public void postSolve(Contact contact, ContactImpulse impulse) {
+
 	}
 }

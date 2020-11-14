@@ -6,10 +6,22 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
 public class Player extends DynamicEntity {
+    Body groundCheck;
+    boolean onGround;
 
     public Player(World world){
-        super(world, Constants.PLAYER_RESTITUTION, Constants.PLAYER_RADIUS, Constants.PLAYER_DENSITY, Constants.PLAYER_FRICTION);
+        super(world, Constants.PLAYER_RESTITUTION, Constants.PLAYER_RADIUS, Constants.PLAYER_DENSITY, Constants.PLAYER_FRICTION, new Vector2(0, 0));
         this.getBody().setFixedRotation(true);
+        BodyDef def = new BodyDef();
+        def.position.set(this.getBody().getPosition());
+        def.type = BodyDef.BodyType.DynamicBody;
+        groundCheck = world.createBody(def);
+        CircleShape shape = new CircleShape();
+        shape.setRadius(1);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.isSensor = true;
+        groundCheck.createFixture(fixtureDef);
     }
 
     public void update() {
@@ -28,6 +40,8 @@ public class Player extends DynamicEntity {
         if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)){
             this.getBody().applyLinearImpulse(0, -.2f*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
         }
+        groundCheck.setTransform(pos.x, pos.y - Constants.PLAYER_RADIUS - 5, 0);
+        System.out.println(onGround);
     }
 
     public void draw() {
@@ -39,5 +53,9 @@ public class Player extends DynamicEntity {
         if(this.getBody().getLinearVelocity().len() > Constants.PLAYER_MAX_SPEED){
             this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().setLength(speed)); // gaming!!!
         }
+    }
+
+    public void setGround(boolean bruh){
+        this.onGround = bruh;
     }
 }

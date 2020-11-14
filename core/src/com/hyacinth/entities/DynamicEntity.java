@@ -6,9 +6,9 @@ import com.badlogic.gdx.physics.box2d.*;
 public abstract class DynamicEntity {
     Body body;
 
-    DynamicEntity(World w, float res, float rad, float density, float friction){
+    DynamicEntity(World w, float res, float rad, float density, float friction, Vector2 position){
         BodyDef def = new BodyDef();
-        def.position.set(40, 10);
+        def.position.set(position);
         def.type = BodyDef.BodyType.DynamicBody;
         this.body = w.createBody(def);
         CircleShape shape = new CircleShape();
