@@ -56,6 +56,7 @@ public class Game extends ApplicationAdapter {
 		groundBody.createFixture(groundBox, 0.0f);
 		groundBox.dispose();
 		world.setContactListener(new GroundListener(this));
+		world.setContactFilter(new BulletFilter());
 	}
 
 	@Override
@@ -70,6 +71,10 @@ public class Game extends ApplicationAdapter {
 				entity.update();
 				if(entity instanceof Player){
 					playerPosition = entity.getBody().getPosition();
+				}
+				if(!entity.getBody().isActive()){
+					//get it outta here
+					world.destroyBody(entity.getBody());
 				}
 			}
 		}
@@ -152,5 +157,14 @@ class GroundListener implements ContactListener {
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse) {
 
+	}
+}
+class BulletFilter implements ContactFilter {
+	@Override
+	public boolean shouldCollide(Fixture fixtureA, Fixture fixtureB) {
+		if(fixtureA.getBody().isBullet() && fixtureB.getBody().isBullet()){
+			return false;
+		}
+		return true;
 	}
 }

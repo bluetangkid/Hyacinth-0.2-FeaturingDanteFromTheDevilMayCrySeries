@@ -19,4 +19,6 @@ public class Constants {
     public static float BULLET_RADIUS = 0.5f;
     public static float BULLET_FRICTION = 0.8f;
     public static float BULLET_RESTITUTION = 0.9f;
+    public static float BULLET_MAX_TIME = 240;
+    public static float BULLET_SPEED_SCALE = 100000f;
 }

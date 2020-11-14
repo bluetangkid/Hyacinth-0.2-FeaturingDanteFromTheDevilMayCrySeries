@@ -13,7 +13,7 @@ public class Player extends DynamicEntity {
     public Player(World world){
         super(world, Constants.PLAYER_RESTITUTION, Constants.PLAYER_RADIUS, Constants.PLAYER_DENSITY, Constants.PLAYER_FRICTION, new Vector2(0, 0));
         this.getBody().setFixedRotation(true);
-        this.gun = new Gun();
+        this.gun = new Gun(world);
         BodyDef def = new BodyDef();
         def.position.set(this.getBody().getPosition());
         def.type = BodyDef.BodyType.DynamicBody;
@@ -45,8 +45,8 @@ public class Player extends DynamicEntity {
             this.getBody().applyLinearImpulse(0, -Constants.PLAYER_FASTFALL_SPEED*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
         }
         if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
-            Vector2 gunForce = this.gun.fireGun(new Vector2(Gdx.input.getX() - (float)Gdx.graphics.getWidth()/2, Gdx.input.getY() - (float)Gdx.graphics.getHeight()/2)).scl(Constants.GUN_FORCE_STATIC_MULT);
-            System.out.println((Gdx.input.getX() - Gdx.graphics.getWidth()/2) + " " + (Gdx.input.getY() - Gdx.graphics.getHeight()/2));
+            Vector2 gunForce = this.gun.fireGun(new Vector2(Gdx.input.getX() - (float)Gdx.graphics.getWidth()/2, Gdx.input.getY() - (float)Gdx.graphics.getHeight()/2), this.getBody().getPosition()).scl(Constants.GUN_FORCE_STATIC_MULT);
+            //System.out.println((Gdx.input.getX() - Gdx.graphics.getWidth()/2) + " " + (Gdx.input.getY() - Gdx.graphics.getHeight()/2));
             this.getBody().applyLinearImpulse(gunForce.x, gunForce.y, pos.x, pos.y, true);
         }
         groundCheck.setTransform(pos.x, pos.y - Constants.PLAYER_RADIUS - 1, 0);
