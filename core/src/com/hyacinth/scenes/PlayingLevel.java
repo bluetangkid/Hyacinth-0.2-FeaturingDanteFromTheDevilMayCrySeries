@@ -48,6 +48,7 @@ public class PlayingLevel {
         world.setContactFilter(new BulletFilter());
         mapRenderer = new OrthogonalTiledMapRenderer(map);//TODO this might need to be passed in with the map to render
         tiledBoxToBodies(map, world, "Tile Layer 1");
+        Gdx.input.setCursorCatched(true);
     }
 
     public void render(OrthographicCamera camera, TiledMapRenderer renderer){
