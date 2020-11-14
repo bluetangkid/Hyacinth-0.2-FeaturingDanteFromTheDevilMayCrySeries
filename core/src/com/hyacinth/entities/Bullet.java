@@ -7,8 +7,9 @@ public class Bullet extends DynamicEntity {
     int timer;
     Bullet(World world, Vector2 velocity, Vector2 position){
         super(world, Constants.BULLET_RESTITUTION, Constants.BULLET_RADIUS, Constants.BULLET_DENSITY, Constants.BULLET_FRICTION, position);
-        this.getBody().setLinearVelocity(velocity.x, velocity.y);
         this.getBody().setBullet(true);
+        this.getBody().setLinearVelocity(velocity.x * Constants.BULLET_SPEED_SCALE, velocity.y * Constants.BULLET_SPEED_SCALE);
+        //System.out.println(this.getBody().getLinearVelocity().x + " " + this.getBody().getLinearVelocity().y);
         this.timer = 0;
     }
     public void update() {

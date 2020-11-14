@@ -83,7 +83,7 @@ public class PlayingLevel {
     }
 
     public void tiledBoxToBodies(TiledMap map, World world, String layer) {
-        TiledMapTileLayer mapLayer = (TiledMapTileLayer)map.getLayers().get("layer1");
+        TiledMapTileLayer mapLayer = (TiledMapTileLayer)map.getLayers().get("Tile Layer 1");
         float tileWidth = map.getProperties().get("tilewidth", Integer.class);
         for (int i = 0; i < mapLayer.getWidth(); i++) {
             for (int j = 0; j < mapLayer.getHeight(); j++) {
@@ -151,7 +151,7 @@ class GroundListener implements ContactListener {
 class BulletFilter implements ContactFilter {
     @Override
     public boolean shouldCollide(Fixture fixtureA, Fixture fixtureB) {
-        if(fixtureA.getBody().isBullet() && fixtureB.getBody().isBullet()){
+        if(fixtureA.getBody().isBullet() || fixtureB.getBody().isBullet()){
             return false;
         }
         return true;
