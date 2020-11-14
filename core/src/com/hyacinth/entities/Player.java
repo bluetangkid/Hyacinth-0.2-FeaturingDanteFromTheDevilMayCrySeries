@@ -6,10 +6,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
 public class Player extends DynamicEntity {
-
+    private Gun gun;
     public Player(World world){
         super(world, Constants.PLAYER_RESTITUTION, Constants.PLAYER_RADIUS, Constants.PLAYER_DENSITY, Constants.PLAYER_FRICTION);
         this.getBody().setFixedRotation(true);
+        this.gun = new Gun();
     }
 
     public void update() {
@@ -26,7 +27,11 @@ public class Player extends DynamicEntity {
             this.getBody().applyLinearImpulse(0, Constants.PLAYER_JUMP_FORCE*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)){
-            this.getBody().applyLinearImpulse(0, -.2f*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
+            this.getBody().applyLinearImpulse(0, -Constants.PLAYER_FASTFALL_SPEED*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
+        }
+        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
+            Vector2 gunForce = this.gun.fireGun(this.getBody().getPosition());
+            this.getBody().applyLinearImpulse(gunForce.x, gunForce.y, pos.x, pos.y, true);
         }
     }
 
@@ -37,7 +42,7 @@ public class Player extends DynamicEntity {
     private void capSpeed(float speed){
         // cap the player speed ONLY IF HOLDING LEFT OR RIGHT so movement is cooler
         if(this.getBody().getLinearVelocity().len() > Constants.PLAYER_MAX_SPEED){
-            this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().setLength(speed)); // gaming!!!
+            this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().setLength(speed));
         }
     }
 }

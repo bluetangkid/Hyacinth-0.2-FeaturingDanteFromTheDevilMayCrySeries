@@ -60,17 +60,23 @@ public class Game extends ApplicationAdapter {
 	@Override
 	public void render () {
 		Array<Body> bodies = new Array<Body>();
+		Vector2 playerPosition = new Vector2();
 		world.getBodies(bodies);
 		for(Body b : bodies) {
 			DynamicEntity entity = (DynamicEntity) b.getUserData();
 			if(entity != null){
 				System.out.println(b.getPosition());
 				entity.update();
+				if(entity instanceof Player){
+					playerPosition = entity.getBody().getPosition();
+				}
 			}
 		}
 		Gdx.gl.glClearColor(.3f, 0.3f, 0.3f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		//batch.begin();
+		camera.position.x = playerPosition.x;
+		camera.position.y = playerPosition.y;
 		camera.update();
 		debugRenderer.render(world, camera.combined);
 		//batch.end();

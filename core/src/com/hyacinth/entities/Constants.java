@@ -10,6 +10,7 @@ public class Constants {
     public static float PLAYER_JUMP_FORCE = 1f;
     public static float PLAYER_IMPULSE_MUL = 5000f;
     public static float PLAYER_MAX_SPEED = 15f;
+    public static float PLAYER_FASTFALL_SPEED = 0.5f;
 
     public static float GRAVITY = 10f;
 
