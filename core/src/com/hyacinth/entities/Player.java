@@ -133,8 +133,13 @@ public class Player extends DynamicEntity {
             //System.out.println((Gdx.input.getX() - Gdx.graphics.getWidth()/2) + " " + (Gdx.input.getY() - Gdx.graphics.getHeight()/2));
             this.getBody().applyLinearImpulse(gunForce.x, gunForce.y, pos.x, pos.y, true);
         }
-        if(Gdx.input.isButtonJustPressed(Input.Keys.X)){
-
+        if(Gdx.input.isKeyJustPressed(Input.Keys.X)){
+            System.out.println(collidingEntities.size());
+            for(StaticEntity e : collidingEntities){
+                if(e instanceof Sign){
+                    ((Sign) e).displayText();
+                }
+            }
         }
         //System.out.println(onGround);
         if(this.jumpTimer > 0) jumpTimer--;
@@ -178,6 +183,14 @@ public class Player extends DynamicEntity {
 
     public void addCollidingEntity(StaticEntity entity){
         collidingEntities.add(entity);
+    }
+    public void removeCollidingEntity(StaticEntity entity){
+        if(collidingEntities.contains(entity)) {
+            collidingEntities.remove(entity);
+        }
+    }
+    public void resetCollidingEntity(){
+        collidingEntities = new ArrayList<>();
     }
 
     public void createGun(int bulletCount, float bulletSpread, float bulletForce, int clipSize, float reloadTime){
