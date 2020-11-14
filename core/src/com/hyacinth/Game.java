@@ -42,7 +42,7 @@ public class Game extends ApplicationAdapter {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		world = new World(new Vector2(0, -10), true);
+		world = new World(new Vector2(0, -Constants.GRAVITY), true);
 		debugRenderer = new Box2DDebugRenderer();
 		camera = new OrthographicCamera(1920, 1080);
 		player = new Player(world);

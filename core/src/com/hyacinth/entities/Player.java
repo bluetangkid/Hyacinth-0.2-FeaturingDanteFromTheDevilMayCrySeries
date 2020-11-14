@@ -15,13 +15,15 @@ public class Player extends DynamicEntity {
     public void update() {
         Vector2 pos = this.getBody().getPosition();
         if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT) && this.getBody().getLinearVelocity().len() < Constants.PLAYER_MAX_SPEED){
-            this.getBody().applyLinearImpulse(-1*Constants.PLAYER_IMPULSE_MUL, 0, pos.x, pos.y, true);
+            this.getBody().applyLinearImpulse(-Constants.PLAYER_IMPULSE_MUL, 0, pos.x, pos.y, true);
+            this.capSpeed(Constants.PLAYER_MAX_SPEED);
         }
         if((Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) && this.getBody().getLinearVelocity().len() < Constants.PLAYER_MAX_SPEED){
-            this.getBody().applyLinearImpulse(1*Constants.PLAYER_IMPULSE_MUL, 0, pos.x, pos.y, true);
+            this.getBody().applyLinearImpulse(Constants.PLAYER_IMPULSE_MUL, 0, pos.x, pos.y, true);
+            this.capSpeed(Constants.PLAYER_MAX_SPEED);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.W) && this.getBody().getLinearVelocity().len() < Constants.PLAYER_MAX_SPEED){
-            this.getBody().applyLinearImpulse(0, 1*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
+        if(Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.W)){
+            this.getBody().applyLinearImpulse(0, Constants.PLAYER_JUMP_FORCE*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)){
             this.getBody().applyLinearImpulse(0, -.2f*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
@@ -30,5 +32,12 @@ public class Player extends DynamicEntity {
 
     public void draw() {
 
+    }
+
+    private void capSpeed(float speed){
+        // cap the player speed ONLY IF HOLDING LEFT OR RIGHT so movement is cooler
+        if(this.getBody().getLinearVelocity().len() > Constants.PLAYER_MAX_SPEED){
+            this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().setLength(speed)); // gaming!!!
+        }
     }
 }
