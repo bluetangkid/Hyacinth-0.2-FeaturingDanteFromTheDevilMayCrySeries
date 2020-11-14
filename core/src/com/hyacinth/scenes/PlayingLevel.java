@@ -154,7 +154,7 @@ class GroundListener implements ContactListener {
 class BulletFilter implements ContactFilter {
     @Override
     public boolean shouldCollide(Fixture fixtureA, Fixture fixtureB) {
-        if(fixtureA.getBody().isBullet() && fixtureB.getBody().isBullet()){
+        if(fixtureA.getBody().isBullet() || fixtureB.getBody().isBullet()){
             return false;
         }
         return true;

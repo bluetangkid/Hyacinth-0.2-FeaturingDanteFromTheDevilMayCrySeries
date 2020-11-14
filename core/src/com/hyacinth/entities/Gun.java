@@ -14,7 +14,7 @@ public class Gun {
         //TODO: what are we inputting? bullet count, spread, force for each bullet? repeats? im just gonna put test variables here for now
         this.world = w;
         this.bullet_count = 10;
-        this.bullet_spread = 50f;
+        this.bullet_spread = 20f;
         this.bullet_force = .2f;
         this.bullets = new ArrayList<>();
     }
@@ -30,11 +30,11 @@ public class Gun {
             Vector2 centerClone = new Vector2(forceCenterDirection);
             //System.out.println(spread);
             Vector2 thisDirection = centerClone.rotateDeg(spread);
-            Vector2 thisForce = thisDirection.scl(this.bullet_force);
+            Vector2 thisForce = new Vector2(thisDirection).scl(this.bullet_force);
             bullets_total_force.add(thisForce);
             //then make the bullet for real
             this.bullets.add(new Bullet(this.world,
-                    (thisDirection.nor()).scl(-Constants.BULLET_SPEED_SCALE * (this.bullet_force * ((float)Math.random() * 0.2f + 0.9f))),
+                    (thisDirection).scl(-1),
                     new Vector2(position).add(thisDirection.nor().scl(Constants.PLAYER_RADIUS))));
         }
         return bullets_total_force;
