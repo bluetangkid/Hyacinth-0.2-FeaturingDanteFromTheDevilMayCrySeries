@@ -6,9 +6,9 @@ public class Constants {
     public static int   MAGIC_NUMBER = 7; // @taro
 
     public static final float GUN_FORCE_STATIC_MULT = 5000f;
-    public static final float PLAYER_DENSITY = 1.2f;
-    public static final float PLAYER_RADIUS = 6f;
-    public static final float PLAYER_FRICTION = 0.8f;
+    public static final float PLAYER_DENSITY = 1.6f;
+    public static final float PLAYER_RADIUS = 4.5f;
+    public static final float PLAYER_FRICTION = 1.8f;
     public static final float PLAYER_RESTITUTION = 0.05f;
     public static final float PLAYER_JUMP_FORCE = 1.2f;
     public static final short PLAYER_JUMP_TIMER = 30;

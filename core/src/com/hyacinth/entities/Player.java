@@ -27,12 +27,12 @@ public class Player extends DynamicEntity {
     PlayerState state;
     private static final float animSpeed = .17f;
     boolean direction;
+    Body lArm, rArm;
 
     public Player(World world, Vector2 spawn, int tileWidth){
         super(world, Constants.PLAYER_RESTITUTION, Constants.PLAYER_RADIUS, Constants.PLAYER_DENSITY, Constants.PLAYER_FRICTION, spawn);
         this.getBody().setFixedRotation(true);
         BodyDef def = new BodyDef();
-        System.out.println(this.getBody().getPosition());
         def.position.set(this.getBody().getPosition());
         def.type = BodyDef.BodyType.DynamicBody;
         groundCheck = world.createBody(def);
@@ -45,6 +45,40 @@ public class Player extends DynamicEntity {
         mass.mass = 0;
         groundCheck.setMassData(mass);
         groundCheck.createFixture(fixtureDef);
+
+        Vector2 bodyPos = this.getBody().getPosition();
+        BodyDef lArmDef = new BodyDef();
+        lArmDef.position.set(bodyPos.x - Constants.PLAYER_RADIUS, bodyPos.y);
+        lArmDef.type = BodyDef.BodyType.DynamicBody;
+        lArm = world.createBody(lArmDef);
+        CircleShape lArmShape = new CircleShape();
+        lArmShape.setRadius(Constants.PLAYER_RADIUS/4f);
+        FixtureDef lArmFix = new FixtureDef();
+        lArmFix.shape = lArmShape;
+        lArmFix.friction = 0.6f;
+        lArmFix.restitution = .01f;
+        lArmFix.density = 1;
+        MassData lmass = new MassData();
+        lmass.mass = 0;
+        lArm.setMassData(lmass);
+        lArm.createFixture(lArmFix);
+
+        BodyDef rArmDef = new BodyDef();
+        rArmDef.position.set(bodyPos.x + Constants.PLAYER_RADIUS, bodyPos.y);
+        rArmDef.type = BodyDef.BodyType.DynamicBody;
+        rArm = world.createBody(rArmDef);
+        CircleShape rArmShape = new CircleShape();
+        rArmShape.setRadius(Constants.PLAYER_RADIUS/4f);
+        FixtureDef rArmFix = new FixtureDef();
+        rArmFix.shape = rArmShape;
+        rArmFix.friction = 0.6f;
+        rArmFix.restitution = .01f;
+        rArmFix.density = 1;
+        MassData rmass = new MassData();
+        rmass.mass = 0;
+        rArm.setMassData(rmass);
+        rArm.createFixture(lArmFix);
+
         this.isPlayer = true;
         this.tileWidth = tileWidth;
         this.collidingEntities = new ArrayList<>();
@@ -72,6 +106,8 @@ public class Player extends DynamicEntity {
         TextureRegion curFrame = idle.getKeyFrame(animTime);
 
         groundCheck.setTransform(pos.x, pos.y - (Constants.PLAYER_RADIUS) + 17, 0);
+        lArm.setTransform(pos.x - Constants.PLAYER_RADIUS, pos.y, 0);
+        rArm.setTransform(pos.x + Constants.PLAYER_RADIUS, pos.y, 0);
         if((Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) && this.getBody().getLinearVelocity().x > -Constants.PLAYER_MAX_SPEED){
             this.getBody().applyLinearImpulse(-Constants.PLAYER_IMPULSE_MUL, 0, pos.x, pos.y, true);
             this.capSpeed(Constants.PLAYER_MAX_SPEED);
