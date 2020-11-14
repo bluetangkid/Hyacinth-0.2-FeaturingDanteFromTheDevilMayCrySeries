@@ -44,7 +44,7 @@ public class Game extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		world = new World(new Vector2(0, -10), true);
 		debugRenderer = new Box2DDebugRenderer();
-		camera = new OrthographicCamera(320, 180);
+		camera = new OrthographicCamera(1920, 1080);
 		player = new Player(world);
 		audio = Gdx.audio;
 		timeStep = 1f/Gdx.graphics.getDisplayMode().refreshRate;
@@ -64,6 +64,7 @@ public class Game extends ApplicationAdapter {
 		for(Body b : bodies) {
 			DynamicEntity entity = (DynamicEntity) b.getUserData();
 			if(entity != null){
+				System.out.println(b.getPosition());
 				entity.update();
 			}
 		}
