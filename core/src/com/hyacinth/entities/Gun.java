@@ -9,10 +9,10 @@ import java.util.ArrayList;
 //for his neutral special, he wields a
 public class Gun {
     World world;
-    int bulletCount, clipSize, reloadTimer, clip;
+    int bulletCount, clipSize, reloadTimer, clip, firerate, fireTimer;
     float bulletForce, bulletSpread, reloadTime;
     ArrayList<Bullet> bullets;
-    public Gun(World w, int bulletCount, float bulletSpread, float bulletForce, int clipSize, float reloadTime){
+    public Gun(World w, int bulletCount, float bulletSpread, float bulletForce, int clipSize, float reloadTime, int firerate){
         //TODO: repeater firing?
         this.world = w;
         this.bulletCount = bulletCount;
@@ -22,13 +22,15 @@ public class Gun {
         this.clip = this.clipSize;
         this.reloadTimer = 0;
         this.reloadTime = reloadTime;
+        this.firerate = firerate;
         this.bullets = new ArrayList<>();
+        this.fireTimer = 0;
     }
     public Vector2 fireGun(Vector2 direction, Vector2 position) {
         //directions should be the position of the mouse relative to the player
         //returns the force to be applied on the user
         //get the unit vector of the force (which is just opposite the direction)
-        if(clip > 0) {
+        if(clip > 0 && fireTimer == 0) {
             Vector2 forceCenterDirection = new Vector2(-direction.x, direction.y).nor();
             //create some bullets and counter-forces, sum them up
             Vector2 bullets_total_force = new Vector2();
@@ -45,6 +47,7 @@ public class Gun {
                         new Vector2(position).add(thisDirection.nor().scl(Constants.PLAYER_RADIUS))));
             }
             clip--;
+            fireTimer = firerate;
             return bullets_total_force;
         }
         return new Vector2();
@@ -56,6 +59,9 @@ public class Gun {
         }
         if(reloadTimer > 0){
             reloadTimer--;
+        }
+        if(fireTimer > 0){
+            fireTimer--;
         }
         if(reloadTimer == 0){
             reloadTimer--;

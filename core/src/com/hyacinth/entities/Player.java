@@ -164,7 +164,7 @@ public class Player extends DynamicEntity {
         if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)){
             this.getBody().applyLinearImpulse(0, -Constants.PLAYER_FASTFALL_SPEED*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
         }
-        if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && !(this.gun == null)){
+        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && !(this.gun == null)){
             Vector2 gunForce = this.gun.fireGun(new Vector2(Gdx.input.getX() - (float)Gdx.graphics.getWidth()/2, Gdx.input.getY() - (float)Gdx.graphics.getHeight()/2), this.getBody().getPosition()).scl(Constants.GUN_FORCE_STATIC_MULT);
             //System.out.println((Gdx.input.getX() - Gdx.graphics.getWidth()/2) + " " + (Gdx.input.getY() - Gdx.graphics.getHeight()/2));
             this.getBody().applyLinearImpulse(gunForce.x, gunForce.y, pos.x, pos.y, true);
@@ -229,7 +229,7 @@ public class Player extends DynamicEntity {
         collidingEntities = new ArrayList<>();
     }
 
-    public void createGun(int bulletCount, float bulletSpread, float bulletForce, int clipSize, float reloadTime){
-        this.gun = new Gun(body.getWorld(), bulletCount, bulletSpread, bulletForce, clipSize, reloadTime);
+    public void createGun(int bulletCount, float bulletSpread, float bulletForce, int clipSize, float reloadTime, int firerate){
+        this.gun = new Gun(body.getWorld(), bulletCount, bulletSpread, bulletForce, clipSize, reloadTime, firerate);
     }
 }

@@ -151,9 +151,9 @@ public class PlayingLevel {
             if(properties.containsKey("text")){
                 //sign!
                 new Sign(world, x, y, width, height, (String)properties.get("text"));
-            }else{
+            }else if(properties.containsKey("exit")){
                 //not sign :(
-
+                new ExitStar(world, x, y, width, height);
             }
         }
     }
@@ -189,7 +189,7 @@ public class PlayingLevel {
     }
 
     private void createGun(MapProperties properties) {
-        int bulletCount = 1, clipSize = 6;
+        int bulletCount = 1, clipSize = 6, firerate = 20;
         float bulletSpread = 0f, bulletForce = 1f, reloadTime = 1f;
         if(properties.containsKey("gunbulletcount")){
             bulletCount = (int)properties.get("gunbulletcount");
@@ -206,7 +206,10 @@ public class PlayingLevel {
         if(properties.containsKey("gunreload")){
             reloadTime = (float)properties.get("gunreload");
         }
-        player.createGun(bulletCount, bulletSpread, bulletForce, clipSize, reloadTime);
+        if(properties.containsKey("gunspeed")){
+            firerate = (int)properties.get("gunspeed");
+        }
+        player.createGun(bulletCount, bulletSpread, bulletForce, clipSize, reloadTime, firerate);
     }
     public void reset(){
         this.initialize(map);
