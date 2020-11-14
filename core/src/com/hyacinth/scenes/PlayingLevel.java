@@ -39,7 +39,7 @@ public class PlayingLevel {
         loadObjects(map, world, "Objects");
         MapProperties properties = map.getLayers().get("Ground").getProperties();
         Vector2 spawn = this.getSpawnLocation(properties);
-        debugRenderer = new Box2DDebugRenderer();
+        //debugRenderer = new Box2DDebugRenderer();
         player = new Player(world, spawn, map.getProperties().get("tilewidth", Integer.class));
         this.createGun(properties);
         timeStep = 1f/ Gdx.graphics.getDisplayMode().refreshRate;
@@ -82,7 +82,7 @@ public class PlayingLevel {
         }
         camera.position.x = playerPosition.x;
         camera.position.y = playerPosition.y;
-        debugRenderer.render(world, camera.combined);
+        //debugRenderer.render(world, camera.combined);
         doPhysicsStep(System.currentTimeMillis() - time);
         mapRenderer.setView(camera);
         mapRenderer.render();
