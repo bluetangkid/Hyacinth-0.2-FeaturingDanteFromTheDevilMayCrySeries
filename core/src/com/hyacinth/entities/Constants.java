@@ -5,23 +5,23 @@ import com.badlogic.gdx.Gdx;
 public class Constants {
     public static int   MAGIC_NUMBER = 7; // @taro
 
-    public static float GUN_FORCE_STATIC_MULT = 5000f;
-    public static float PLAYER_DENSITY = 0.5f;
-    public static float PLAYER_RADIUS = 10f;
-    public static float PLAYER_FRICTION = 0.8f;
-    public static float PLAYER_RESTITUTION = 0.05f;
-    public static float PLAYER_JUMP_FORCE = 1f;
-    public static short PLAYER_JUMP_TIMER = 10;
-    public static float PLAYER_IMPULSE_MUL = 5000f;
-    public static float PLAYER_MAX_SPEED = 15f;
-    public static float PLAYER_FASTFALL_SPEED = 0.3f;
+    public static final float GUN_FORCE_STATIC_MULT = 5000f;
+    public static final float PLAYER_DENSITY = 1.2f;
+    public static final float PLAYER_RADIUS = 6f;
+    public static final float PLAYER_FRICTION = 0.8f;
+    public static final float PLAYER_RESTITUTION = 0.05f;
+    public static final float PLAYER_JUMP_FORCE = 1.2f;
+    public static final short PLAYER_JUMP_TIMER = 30;
+    public static final float PLAYER_IMPULSE_MUL = 5000f;
+    public static final float PLAYER_MAX_SPEED = 15f;
+    public static final float PLAYER_FASTFALL_SPEED = 0.05f;
 
-    public static float GRAVITY = 10f;
+    public static final float GRAVITY = 10f;
 
-    public static float BULLET_DENSITY = 0.5f;
-    public static float BULLET_RADIUS = 0.5f;
-    public static float BULLET_FRICTION = 0.3f;
-    public static float BULLET_RESTITUTION = 0.9f;
-    public static int   BULLET_MAX_TIME = 240;
-    public static float BULLET_SPEED_SCALE = 100f;
+    public static final float BULLET_DENSITY = 0.5f;
+    public static final float BULLET_RADIUS = 0.5f;
+    public static final float BULLET_FRICTION = 0.3f;
+    public static final float BULLET_RESTITUTION = 0.9f;
+    public static final int   BULLET_MAX_TIME = 240;
+    public static final float BULLET_SPEED_SCALE = 100f;
 }

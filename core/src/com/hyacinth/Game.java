@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -42,15 +43,20 @@ public class Game extends ApplicationAdapter {
 	private PlayingLevel[] levels;
 	private TiledRenderer renderer;
 	private LevelSelect levelSelect;
+	private Music mainMusic;
 
 	@Override
 	public void create () {
 		state = GameState.TITLE;
 		generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/pixeboy.ttf"));
 		batch = new SpriteBatch();
-		camera = new OrthographicCamera(1280, 720);//changing these values is just zooming in/out
+		camera = new OrthographicCamera(1280/1.2f, 720/1.2f);//changing these values is just zooming in/out
 
 		audio = Gdx.audio;
+		mainMusic = audio.newMusic(Gdx.files.internal("sound/Chucky Chease Beats.mp3"));
+		mainMusic.setLooping(true);
+		mainMusic.setVolume(.2f);
+		mainMusic.play();
 
 		title = new Title(generator);
 		cursor = new Texture(Gdx.files.internal("textures/cursor.png"));

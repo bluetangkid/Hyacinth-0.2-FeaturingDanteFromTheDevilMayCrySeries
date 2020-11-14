@@ -176,7 +176,7 @@ public class PlayingLevel {
 
     public Vector2 getSpawnLocation(MapProperties properties){
         if(properties.containsKey("spawnX") && properties.containsKey("spawnY")){
-            return new Vector2((int)properties.get("spawnX"), (int)properties.get("spawnY"));
+            return new Vector2((int)properties.get("spawnX"), (int)properties.get("spawnY") + 5);
         }
         return new Vector2();
     }
