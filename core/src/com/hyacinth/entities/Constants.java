@@ -1,8 +1,10 @@
 package com.hyacinth.entities;
 
+import com.badlogic.gdx.Gdx;
+
 public class Constants {
     public static float PLAYER_DENSITY = 0.5f;
-    public static float PLAYER_RADIUS = 6f;
+    public static float PLAYER_RADIUS = 20f;
     public static float PLAYER_FRICTION = 0.5f;
     public static float PLAYER_RESTITUTION = 0.05f;
 

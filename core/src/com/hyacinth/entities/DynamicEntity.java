@@ -2,12 +2,14 @@ package com.hyacinth.entities;
 
 import com.badlogic.gdx.physics.box2d.*;
 
-abstract class Entity {
-    Entity(World w, float res, float rad, float density, float friction){
+public abstract class DynamicEntity {
+    Body body;
+
+    DynamicEntity(World w, float res, float rad, float density, float friction){
         BodyDef def = new BodyDef();
         def.type = BodyDef.BodyType.DynamicBody;
-        def.position.set(100, 100);
-        Body body = w.createBody(def);
+        def.position.set(20, 0);
+        this.body = w.createBody(def);
         CircleShape shape = new CircleShape();
         shape.setRadius(rad);
         FixtureDef fixtureDef = new FixtureDef();
@@ -16,9 +18,14 @@ abstract class Entity {
         fixtureDef.density = density;
         fixtureDef.friction = friction;
         shape.dispose();
+        this.body.setUserData(this);
     }
 
-    abstract void update();
+    public Body getBody (){
+        return body;
+    }
 
-    abstract void draw();
+    public abstract void update();
+
+    public abstract void draw();
 }
