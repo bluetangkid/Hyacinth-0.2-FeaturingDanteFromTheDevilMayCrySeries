@@ -42,12 +42,13 @@ public class Player extends DynamicEntity {
         if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)){
             this.getBody().applyLinearImpulse(0, -Constants.PLAYER_FASTFALL_SPEED*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
         }
-        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
-            Vector2 gunForce = this.gun.fireGun(this.getBody().getPosition());
+        if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
+            Vector2 gunForce = this.gun.fireGun(new Vector2(Gdx.input.getX() - (float)Gdx.graphics.getWidth()/2, Gdx.input.getY() - (float)Gdx.graphics.getHeight()/2)).scl(Constants.GUN_FORCE_STATIC_MULT);
+            System.out.println((Gdx.input.getX() - Gdx.graphics.getWidth()/2) + " " + (Gdx.input.getY() - Gdx.graphics.getHeight()/2));
             this.getBody().applyLinearImpulse(gunForce.x, gunForce.y, pos.x, pos.y, true);
         }
         groundCheck.setTransform(pos.x, pos.y - Constants.PLAYER_RADIUS - 5, 0);
-        System.out.println(onGround);
+        //System.out.println(onGround);
     }
 
     public void draw() {

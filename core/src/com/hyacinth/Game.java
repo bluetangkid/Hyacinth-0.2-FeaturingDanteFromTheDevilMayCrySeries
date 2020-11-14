@@ -66,7 +66,7 @@ public class Game extends ApplicationAdapter {
 		for(Body b : bodies) {
 			DynamicEntity entity = (DynamicEntity) b.getUserData();
 			if(entity != null){
-				System.out.println(b.getPosition());
+				//System.out.println(b.getPosition());
 				entity.update();
 				if(entity instanceof Player){
 					playerPosition = entity.getBody().getPosition();

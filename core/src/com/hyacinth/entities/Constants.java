@@ -3,6 +3,7 @@ package com.hyacinth.entities;
 import com.badlogic.gdx.Gdx;
 
 public class Constants {
+    public static float GUN_FORCE_STATIC_MULT = 10000f;
     public static float PLAYER_DENSITY = 0.5f;
     public static float PLAYER_RADIUS = 10f;
     public static float PLAYER_FRICTION = 0.5f;
