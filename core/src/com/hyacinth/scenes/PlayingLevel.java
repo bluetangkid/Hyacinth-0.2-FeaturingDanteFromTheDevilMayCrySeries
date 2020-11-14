@@ -46,7 +46,7 @@ public class PlayingLevel {
     }
 
     public void render(OrthographicCamera camera, TiledMapRenderer renderer){
-        Array<Body> bodies = new Array<Body>();
+        Array<Body> bodies = new Array<>();
         Vector2 playerPosition = new Vector2();
         world.getBodies(bodies);
         for (Body b : bodies) {
@@ -55,6 +55,7 @@ public class PlayingLevel {
                 //System.out.println(b.getPosition());
                 entity.update();
                 if (entity instanceof Player) {
+                    //System.out.println("Player");
                     playerPosition = entity.getBody().getPosition();
                 }
                 if(!entity.getBody().isActive()){
@@ -87,7 +88,7 @@ public class PlayingLevel {
         for (int i = 0; i < mapLayer.getWidth(); i++) {
             for (int j = 0; j < mapLayer.getHeight(); j++) {
                 if(mapLayer.getCell(i, j) != null) {
-                    System.out.println("AAA");
+                    // System.out.println(i + " " + j);
                     Rectangle rectangle = new Rectangle(i * tileWidth + mapLayer.getOffsetX(), j * tileWidth + mapLayer.getOffsetY(), tileWidth, tileWidth);
                     BodyDef bodyDef = new BodyDef();
                     bodyDef.type = BodyDef.BodyType.StaticBody;
