@@ -55,9 +55,12 @@ public class Player extends DynamicEntity {
     }
 
     private void capSpeed(float speed){
-        // cap the player speed ONLY IF HOLDING LEFT OR RIGHT so movement is cooler
-        if(this.getBody().getLinearVelocity().len() > Constants.PLAYER_MAX_SPEED){
-            this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().setLength(speed));
+        // cap the horizontal player speed ONLY IF HOLDING LEFT OR RIGHT so movement is cooler
+        if(this.getBody().getLinearVelocity().x > Constants.PLAYER_MAX_SPEED){
+            this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().set(Constants.PLAYER_MAX_SPEED, this.getBody().getLinearVelocity().y));
+        }
+        if(this.getBody().getLinearVelocity().x < -Constants.PLAYER_MAX_SPEED){
+            this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().set(-Constants.PLAYER_MAX_SPEED, this.getBody().getLinearVelocity().y));
         }
     }
 
