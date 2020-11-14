@@ -25,6 +25,7 @@ public class Player extends DynamicEntity {
         fixtureDef.shape = shape;
         fixtureDef.isSensor = true;
         groundCheck.createFixture(fixtureDef);
+        this.isPlayer = true;
     }
 
     public void update() {

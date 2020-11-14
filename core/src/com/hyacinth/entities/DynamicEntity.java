@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.*;
 
 public abstract class DynamicEntity {
     Body body;
+    boolean isPlayer = false;
 
     DynamicEntity(World w, float res, float rad, float density, float friction, Vector2 position){
         BodyDef def = new BodyDef();
@@ -22,6 +23,8 @@ public abstract class DynamicEntity {
         shape.dispose();
         this.body.setUserData(this);
     }
+
+    public boolean isPlayer(){return isPlayer;};
 
     public Body getBody (){
         return body;

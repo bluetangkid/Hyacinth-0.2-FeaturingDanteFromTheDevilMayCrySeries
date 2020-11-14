@@ -42,7 +42,7 @@ public class PlayingLevel {
         world.setContactListener(new GroundListener(this));
         world.setContactFilter(new BulletFilter());
         mapRenderer = new OrthogonalTiledMapRenderer(map);//TODO this might need to be passed in with the map to render
-        tiledBoxToBodies(map, world, "layer1");
+        tiledBoxToBodies(map, world, "Tile Layer 1");
     }
 
     public void render(OrthographicCamera camera, TiledMapRenderer renderer){
@@ -154,7 +154,8 @@ class GroundListener implements ContactListener {
 class BulletFilter implements ContactFilter {
     @Override
     public boolean shouldCollide(Fixture fixtureA, Fixture fixtureB) {
-        if(fixtureA.getBody().isBullet() || fixtureB.getBody().isBullet()){
+        if((fixtureA.getBody().isBullet() && fixtureB.getBody().getUserData() != null && ((DynamicEntity)fixtureB.getBody().getUserData()).isPlayer())
+                || (fixtureB.getBody().isBullet() && fixtureA.getBody().getUserData() != null && ((DynamicEntity)fixtureA.getBody().getUserData()).isPlayer())){
             return false;
         }
         return true;
