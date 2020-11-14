@@ -9,12 +9,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
+import java.util.ArrayList;
+
 public class Player extends DynamicEntity {
     private Gun gun;
     Body groundCheck;
     int onGround;
     short jumpTimer;
     int tileWidth;
+    ArrayList<StaticEntity> collidingEntities;
     Animation<TextureRegion> running;
     Animation<TextureRegion> jump;
     Animation<TextureRegion> idle;
@@ -44,6 +47,7 @@ public class Player extends DynamicEntity {
         groundCheck.createFixture(fixtureDef);
         this.isPlayer = true;
         this.tileWidth = tileWidth;
+        this.collidingEntities = new ArrayList<>();
         atlas = new TextureAtlas(Gdx.files.internal("textures/player.atlas"));
         running = new Animation<TextureRegion>(animSpeed, atlas.findRegions("run"), Animation.PlayMode.LOOP);
         jump = new Animation<TextureRegion>(animSpeed, atlas.findRegions("jump"), Animation.PlayMode.NORMAL);
@@ -129,6 +133,9 @@ public class Player extends DynamicEntity {
             //System.out.println((Gdx.input.getX() - Gdx.graphics.getWidth()/2) + " " + (Gdx.input.getY() - Gdx.graphics.getHeight()/2));
             this.getBody().applyLinearImpulse(gunForce.x, gunForce.y, pos.x, pos.y, true);
         }
+        if(Gdx.input.isButtonJustPressed(Input.Keys.X)){
+
+        }
         //System.out.println(onGround);
         if(this.jumpTimer > 0) jumpTimer--;
         this.gun.update();
@@ -168,6 +175,11 @@ public class Player extends DynamicEntity {
     public void addGround(int bruh){
         this.onGround += bruh;
     }
+
+    public void addCollidingEntity(StaticEntity entity){
+        collidingEntities.add(entity);
+    }
+
     public void createGun(int bulletCount, float bulletSpread, float bulletForce, int clipSize, float reloadTime){
         this.gun = new Gun(body.getWorld(), bulletCount, bulletSpread, bulletForce, clipSize, reloadTime);
     }
