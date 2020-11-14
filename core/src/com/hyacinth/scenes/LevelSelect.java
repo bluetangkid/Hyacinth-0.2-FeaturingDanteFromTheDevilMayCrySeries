@@ -33,10 +33,10 @@ public class LevelSelect {
         spriteCranberry.begin();
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 6; j++){
-                subTitleFont.draw(spriteCranberry, Integer.toString(i*4 + j + 1), j*150 + 1920/2 - 5*75, (4-i)*250 + 1080/2 - 6*125);
+                subTitleFont.draw(spriteCranberry, Integer.toString(i*6 + j + 1), j*150 + 1920/2 - 5*75, (4-i)*250 + 1080/2 - 6*125);
                 if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
-                    if(Math.sqrt(Math.pow(Gdx.input.getX() - j*150 + 1920/2  - 5*75, 2) - Math.pow(Gdx.input.getY() - (4-i)*250 + 1080/2 - 6*125, 2)) < 50){
-                        return i*4 + j;
+                    if(Math.sqrt(Math.pow(Gdx.input.getY() - j*150 + 1920/2  - 5*75, 2) - Math.pow(Gdx.input.getX() - (4-i)*250 + 1080/2 - 6*125, 2)) < 80){
+                        return i*6 + j;
                     }
                 }
             }
