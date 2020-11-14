@@ -115,7 +115,7 @@ public class PlayingLevel {
                     FixtureDef def = new FixtureDef();
                     def.shape = getShapeFromRectangle(rectangle);
                     def.density = .2f;
-                    def.isSensor = false;
+                    def.isSensor = (mapLayer.getCell(i, j).getTile().getId() != 1);
                     def.friction = 0.1f;
                     body.setTransform(getTransformedCenterForRectangle(rectangle), 0);
                     body.createFixture(def);
@@ -172,6 +172,10 @@ public class PlayingLevel {
 
     public void setPlayerGround(int bruh){
         player.addGround(bruh);
+    }
+
+    public void playerCollidingWithEntity(StaticEntity entity){
+        player.addCollidingEntity(entity);
     }
 
     public Vector2 getSpawnLocation(MapProperties properties){
@@ -243,12 +247,19 @@ class GroundListener implements ContactListener {
 class BulletFilter implements ContactFilter {
     @Override
     public boolean shouldCollide(Fixture fixtureA, Fixture fixtureB) {
-        if((fixtureA.getBody().isBullet() && fixtureB.getBody().getUserData() != null &&
-                fixtureB.getBody().getUserData() instanceof DynamicEntity && ((DynamicEntity)fixtureB.getBody().getUserData()).isPlayer())
-                || (fixtureB.getBody().isBullet() && fixtureA.getBody().getUserData() != null &&
-                fixtureA.getBody().getUserData() instanceof DynamicEntity && ((DynamicEntity)fixtureA.getBody().getUserData()).isPlayer())){
+        if((fixtureA.getBody().isBullet() && isPlayer(fixtureB))
+                || (fixtureB.getBody().isBullet() && isPlayer(fixtureA))){
             return false;
         }
+
+        // additional checks, none of this modifies shouldcollide
+
         return true;
+    }
+
+    private boolean isPlayer(Fixture fixture){
+        return fixture.getBody().getUserData() != null &&
+                fixture.getBody().getUserData() instanceof DynamicEntity &&
+                ((DynamicEntity)fixture.getBody().getUserData()).isPlayer();
     }
 }
