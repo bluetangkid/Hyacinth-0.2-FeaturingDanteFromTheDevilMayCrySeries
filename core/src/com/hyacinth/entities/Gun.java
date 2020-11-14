@@ -50,7 +50,7 @@ public class Gun {
         return new Vector2();
     }
     public void update(){
-        System.out.println(reloadTimer + "///" + clip);
+        //System.out.println(reloadTimer + "///" + clip);
         if(clip == 0 && reloadTimer <= 0){
             reloadTimer = (int)Math.ceil(reloadTime / Gdx.graphics.getDeltaTime());
         }
