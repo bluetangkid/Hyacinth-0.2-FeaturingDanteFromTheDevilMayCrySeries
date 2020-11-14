@@ -47,11 +47,6 @@ public class Title {
     }
 
     public boolean draw(Camera c) {
-        c.update();
-
-        Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         spriteCranberry.begin();
         titleFont.draw(spriteCranberry, "Hyacinth 0.2", 1920/2 - titleLayout.width/2, 1080/1.35f - titleLayout.height/2);
         spriteCranberry.end();

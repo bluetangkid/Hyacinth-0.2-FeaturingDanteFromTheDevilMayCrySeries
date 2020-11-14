@@ -9,9 +9,10 @@ public class Player extends DynamicEntity {
     private Gun gun;
     Body groundCheck;
     boolean onGround;
+    short jumpTimer;
 
     public Player(World world){
-        super(world, Constants.PLAYER_RESTITUTION, Constants.PLAYER_RADIUS, Constants.PLAYER_DENSITY, Constants.PLAYER_FRICTION, new Vector2(0, 0));
+        super(world, Constants.PLAYER_RESTITUTION, Constants.PLAYER_RADIUS, Constants.PLAYER_DENSITY, Constants.PLAYER_FRICTION, new Vector2(100, 600));
         this.getBody().setFixedRotation(true);
         this.gun = new Gun(world);
         BodyDef def = new BodyDef();
@@ -36,10 +37,10 @@ public class Player extends DynamicEntity {
             this.getBody().applyLinearImpulse(Constants.PLAYER_IMPULSE_MUL, 0, pos.x, pos.y, true);
             this.capSpeed(Constants.PLAYER_MAX_SPEED);
         }
-        if((Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.W)) && onGround){
-            this.getBody().setTransform(pos.x, pos.y + 10, 0);
-            this.getBody().applyTorque(100, true);
+        if((Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.W)) && onGround && jumpTimer == 0){
+            this.getBody().setTransform(pos.x, pos.y + 1, 0);
             this.getBody().applyLinearImpulse(0, Constants.PLAYER_JUMP_FORCE*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
+            jumpTimer = 20;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)){
             this.getBody().applyLinearImpulse(0, -Constants.PLAYER_FASTFALL_SPEED*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
@@ -51,6 +52,7 @@ public class Player extends DynamicEntity {
         }
         groundCheck.setTransform(pos.x, pos.y - Constants.PLAYER_RADIUS - 1, 0);
         //System.out.println(onGround);
+        if(jumpTimer > 0) jumpTimer--;
     }
 
     public void draw() {

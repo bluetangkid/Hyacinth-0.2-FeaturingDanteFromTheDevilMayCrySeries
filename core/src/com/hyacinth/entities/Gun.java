@@ -15,7 +15,7 @@ public class Gun {
         this.world = w;
         this.bullet_count = 10;
         this.bullet_spread = 50f;
-        this.bullet_force = 10f;
+        this.bullet_force = .2f;
         this.bullets = new ArrayList<>();
     }
     public Vector2 fireGun(Vector2 direction, Vector2 position) {
