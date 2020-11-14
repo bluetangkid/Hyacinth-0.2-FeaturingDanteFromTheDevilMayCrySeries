@@ -14,6 +14,7 @@ public class Player extends DynamicEntity {
     public Player(World world, Vector2 spawn){
         super(world, Constants.PLAYER_RESTITUTION, Constants.PLAYER_RADIUS, Constants.PLAYER_DENSITY, Constants.PLAYER_FRICTION, spawn);
         this.getBody().setFixedRotation(true);
+        this.gun = new Gun(world);
         BodyDef def = new BodyDef();
         def.position.set(this.getBody().getPosition());
         def.type = BodyDef.BodyType.DynamicBody;
@@ -40,7 +41,7 @@ public class Player extends DynamicEntity {
         if((Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.W)) && onGround > 0 && jumpTimer == 0){
             this.getBody().setTransform(pos.x, pos.y + 1, 0);
             this.getBody().applyLinearImpulse(0, Constants.PLAYER_JUMP_FORCE*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
-            jumpTimer = 40;
+            jumpTimer = 20;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)){
             this.getBody().applyLinearImpulse(0, -Constants.PLAYER_FASTFALL_SPEED*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);

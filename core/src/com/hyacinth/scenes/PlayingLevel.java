@@ -97,7 +97,6 @@ public class PlayingLevel {
                     bodyDef.type = BodyDef.BodyType.StaticBody;
                     Body body = world.createBody(bodyDef);
                     Fixture fixture = body.createFixture(getShapeFromRectangle(rectangle, tileWidth), 0.2f);
-                    fixture.setUserData(true);
                     fixture.setFriction(0.1f);
                     body.setTransform(getTransformedCenterForRectangle(rectangle, map), 0);
                 }
@@ -153,18 +152,16 @@ class GroundListener implements ContactListener {
 
     @Override
     public void beginContact(Contact contact) {
-        if((contact.getFixtureA().isSensor() || contact.getFixtureB().isSensor()) &&
-                ((contact.getFixtureA().getUserData() != null && (boolean)contact.getFixtureA().getUserData()) ||
-                        (contact.getFixtureB().getUserData() != null && (boolean)contact.getFixtureB().getUserData()))){
+        if((contact.getFixtureA().isSensor() && contact.getFixtureB().getBody().getType() == BodyDef.BodyType.StaticBody) ||
+                (contact.getFixtureB().isSensor() && contact.getFixtureA().getBody().getType() == BodyDef.BodyType.StaticBody)){
             world.setPlayerGround(1);
         }
     }
 
     @Override
     public void endContact(Contact contact) {
-        if((contact.getFixtureA().isSensor() || contact.getFixtureB().isSensor()) &&
-                ((contact.getFixtureA().getUserData() != null && (boolean)contact.getFixtureA().getUserData()) ||
-                        (contact.getFixtureB().getUserData() != null && (boolean)contact.getFixtureB().getUserData()))){
+        if((contact.getFixtureA().isSensor() && contact.getFixtureB().getBody().getType() == BodyDef.BodyType.StaticBody) ||
+                (contact.getFixtureB().isSensor() && contact.getFixtureA().getBody().getType() == BodyDef.BodyType.StaticBody)){
             world.setPlayerGround(-1);
         }
     }
