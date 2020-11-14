@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.utils.Array;
 import com.hyacinth.entities.Constants;
 import com.hyacinth.entities.DynamicEntity;
 import com.hyacinth.entities.Player;
+import com.hyacinth.scenes.Title;
 
 import java.util.ArrayList;
 
@@ -38,9 +40,14 @@ public class Game extends ApplicationAdapter {
 	private int level;
 	private float timeStep;
 	private Player player;
-	
+	private GameState state;
+	private FreeTypeFontGenerator generator;
+	private Title title;
+
 	@Override
 	public void create () {
+		state = GameState.TITLE;
+		generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/pixeboy.ttf"));
 		batch = new SpriteBatch();
 		world = new World(new Vector2(0, -Constants.GRAVITY), true);
 		debugRenderer = new Box2DDebugRenderer();
@@ -57,37 +64,44 @@ public class Game extends ApplicationAdapter {
 		groundBox.dispose();
 		world.setContactListener(new GroundListener(this));
 		world.setContactFilter(new BulletFilter());
+		title = new Title(generator);
 	}
 
 	@Override
 	public void render () {
-		Array<Body> bodies = new Array<Body>();
-		Vector2 playerPosition = new Vector2();
-		world.getBodies(bodies);
-		for(Body b : bodies) {
-			DynamicEntity entity = (DynamicEntity) b.getUserData();
-			if(entity != null){
-				//System.out.println(b.getPosition());
-				entity.update();
-				if(entity instanceof Player){
-					playerPosition = entity.getBody().getPosition();
-				}
-				if(!entity.getBody().isActive()){
-					//get it outta here
-					world.destroyBody(entity.getBody());
+		if(state == GameState.TITLE) {
+			if (title.draw(camera)) {
+				state = GameState.GAME;
+			}
+		} else {
+			Array<Body> bodies = new Array<Body>();
+			Vector2 playerPosition = new Vector2();
+			world.getBodies(bodies);
+			for (Body b : bodies) {
+				DynamicEntity entity = (DynamicEntity) b.getUserData();
+				if (entity != null) {
+					//System.out.println(b.getPosition());
+					entity.update();
+					if (entity instanceof Player) {
+						playerPosition = entity.getBody().getPosition();
+					}
+					if(!entity.getBody().isActive()){
+						//get it outta here
+						world.destroyBody(entity.getBody());
+					}
 				}
 			}
+			Gdx.gl.glClearColor(.3f, 0.3f, 0.3f, 1);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			//batch.begin();
+			camera.position.x = playerPosition.x;
+			camera.position.y = playerPosition.y;
+			camera.update();
+			debugRenderer.render(world, camera.combined);
+			//batch.end();
+			doPhysicsStep(System.currentTimeMillis() - time);
+			time = System.currentTimeMillis();
 		}
-		Gdx.gl.glClearColor(.3f, 0.3f, 0.3f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		//batch.begin();
-		camera.position.x = playerPosition.x;
-		camera.position.y = playerPosition.y;
-		camera.update();
-		debugRenderer.render(world, camera.combined);
-		//batch.end();
-		doPhysicsStep(System.currentTimeMillis() - time);
-		time = System.currentTimeMillis();
 	}
 
 	private void doPhysicsStep(float deltaTime) {
@@ -151,7 +165,6 @@ class GroundListener implements ContactListener {
 
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold) {
-
 	}
 
 	@Override
