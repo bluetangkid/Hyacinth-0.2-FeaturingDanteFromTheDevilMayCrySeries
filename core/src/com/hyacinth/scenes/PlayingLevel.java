@@ -51,7 +51,7 @@ public class PlayingLevel {
 //        groundBody.createFixture(groundBox, 0.0f);
 //        groundBox.dispose();
         world.setContactListener(new GroundListener(this));
-        world.setContactFilter(new BulletFilter());
+        world.setContactFilter(new BulletFilter(this));
         mapRenderer = new OrthogonalTiledMapRenderer(map);//TODO this might need to be passed in with the map to render
         Gdx.input.setCursorCatched(true);
     }
@@ -177,6 +177,9 @@ public class PlayingLevel {
     public void playerCollidingWithEntity(StaticEntity entity){
         player.addCollidingEntity(entity);
     }
+    public void playerRemoveCollidingWithEntity(StaticEntity entity){
+        player.removeCollidingEntity(entity);
+    }
 
     public Vector2 getSpawnLocation(MapProperties properties){
         if(properties.containsKey("spawnX") && properties.containsKey("spawnY")){
@@ -223,14 +226,23 @@ class GroundListener implements ContactListener {
                 (contact.getFixtureB().isSensor() && contact.getFixtureA().getBody().getType() == BodyDef.BodyType.StaticBody)){
             world.setPlayerGround(1);
         }
+        if (isPlayer(contact.getFixtureA()) && isStaticEntity(contact.getFixtureB())){
+            world.playerCollidingWithEntity((StaticEntity)contact.getFixtureB().getBody().getUserData());
+        }else if(isPlayer(contact.getFixtureB()) && isStaticEntity(contact.getFixtureA())){
+            world.playerCollidingWithEntity((StaticEntity)contact.getFixtureA().getBody().getUserData());
+        }
     }
 
     @Override
     public void endContact(Contact contact) {
-        if((contact.getFixtureA().isSensor() && contact.getFixtureA().getUserData() != null && contact.getFixtureA().getUserData() instanceof DynamicEntity
-                && contact.getFixtureB().getBody().getType() == BodyDef.BodyType.StaticBody) ||
+        if((contact.getFixtureA().isSensor() && contact.getFixtureB().getBody().getType() == BodyDef.BodyType.StaticBody) ||
                 (contact.getFixtureB().isSensor() && contact.getFixtureA().getBody().getType() == BodyDef.BodyType.StaticBody)){
             world.setPlayerGround(-1);
+        }
+        if (isPlayer(contact.getFixtureA()) && isStaticEntity(contact.getFixtureB())){
+            world.playerRemoveCollidingWithEntity((StaticEntity)contact.getFixtureB().getBody().getUserData());
+        }else if(isPlayer(contact.getFixtureB()) && isStaticEntity(contact.getFixtureA())){
+            world.playerRemoveCollidingWithEntity((StaticEntity)contact.getFixtureA().getBody().getUserData());
         }
     }
 
@@ -243,17 +255,28 @@ class GroundListener implements ContactListener {
     public void postSolve(Contact contact, ContactImpulse impulse) {
 
     }
+    private boolean isPlayer(Fixture fixture){
+        return fixture.getBody().getUserData() != null &&
+                fixture.getBody().getUserData() instanceof DynamicEntity &&
+                ((DynamicEntity)fixture.getBody().getUserData()).isPlayer();
+    }
+    private boolean isStaticEntity(Fixture fixture){
+        return fixture.getBody().getUserData() != null &&
+                fixture.getBody().getUserData() instanceof StaticEntity;
+    }
 }
 class BulletFilter implements ContactFilter {
+    PlayingLevel world;
+    BulletFilter(PlayingLevel w){
+        this.world = w;
+    }
+
     @Override
     public boolean shouldCollide(Fixture fixtureA, Fixture fixtureB) {
         if((fixtureA.getBody().isBullet() && isPlayer(fixtureB))
                 || (fixtureB.getBody().isBullet() && isPlayer(fixtureA))){
             return false;
         }
-
-        // additional checks, none of this modifies shouldcollide
-
         return true;
     }
 

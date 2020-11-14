@@ -12,4 +12,9 @@ public class Sign extends StaticEntity{
 
     @Override
     public void update() {}
+
+    public void displayText(){
+        System.out.println(text);
+        //TODO: display the text
+    }
 }
