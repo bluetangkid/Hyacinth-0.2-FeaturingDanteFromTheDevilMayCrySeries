@@ -3,12 +3,15 @@ package com.hyacinth.entities;
 import com.badlogic.gdx.Gdx;
 
 public class Constants {
+    public static int   MAGIC_NUMBER = 7; // @taro
+
     public static float GUN_FORCE_STATIC_MULT = 5000f;
     public static float PLAYER_DENSITY = 0.5f;
     public static float PLAYER_RADIUS = 10f;
     public static float PLAYER_FRICTION = 0.8f;
     public static float PLAYER_RESTITUTION = 0.05f;
-    public static float PLAYER_JUMP_FORCE = 2f;
+    public static float PLAYER_JUMP_FORCE = 1f;
+    public static short PLAYER_JUMP_TIMER = 10;
     public static float PLAYER_IMPULSE_MUL = 5000f;
     public static float PLAYER_MAX_SPEED = 15f;
     public static float PLAYER_FASTFALL_SPEED = 0.3f;
@@ -19,6 +22,6 @@ public class Constants {
     public static float BULLET_RADIUS = 0.5f;
     public static float BULLET_FRICTION = 0.3f;
     public static float BULLET_RESTITUTION = 0.9f;
-    public static float BULLET_MAX_TIME = 240;
+    public static int   BULLET_MAX_TIME = 240;
     public static float BULLET_SPEED_SCALE = 100f;
 }

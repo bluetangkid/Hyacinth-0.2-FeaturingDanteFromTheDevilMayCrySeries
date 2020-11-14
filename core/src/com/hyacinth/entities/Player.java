@@ -35,19 +35,19 @@ public class Player extends DynamicEntity {
     public void update() {
         Vector2 pos = this.getBody().getPosition();
         groundCheck.setTransform(pos.x, pos.y - (Constants.PLAYER_RADIUS) + tileWidth, 0);
-        if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+        if((Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) && this.getBody().getLinearVelocity().x > -Constants.PLAYER_MAX_SPEED){
             this.getBody().applyLinearImpulse(-Constants.PLAYER_IMPULSE_MUL, 0, pos.x, pos.y, true);
             this.capSpeed(Constants.PLAYER_MAX_SPEED);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+        if((Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) && this.getBody().getLinearVelocity().x < Constants.PLAYER_MAX_SPEED){
             this.getBody().applyLinearImpulse(Constants.PLAYER_IMPULSE_MUL, 0, pos.x, pos.y, true);
             this.capSpeed(Constants.PLAYER_MAX_SPEED);
         }
-        System.out.println(this.onGround);
+        //System.out.println(this.onGround);
         if((Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.W)) && this.onGround > 0 && this.jumpTimer == 0){
             this.getBody().setTransform(pos.x, pos.y + 1, 0);
             this.getBody().applyLinearImpulse(0, Constants.PLAYER_JUMP_FORCE*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
-            jumpTimer = 20;
+            this.jumpTimer = Constants.PLAYER_JUMP_TIMER;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)){
             this.getBody().applyLinearImpulse(0, -Constants.PLAYER_FASTFALL_SPEED*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
@@ -58,7 +58,7 @@ public class Player extends DynamicEntity {
             this.getBody().applyLinearImpulse(gunForce.x, gunForce.y, pos.x, pos.y, true);
         }
         //System.out.println(onGround);
-        if(this.jumpTimer > 0) this.jumpTimer--;
+        if(this.jumpTimer > 0) jumpTimer--;
         this.gun.update();
     }
 

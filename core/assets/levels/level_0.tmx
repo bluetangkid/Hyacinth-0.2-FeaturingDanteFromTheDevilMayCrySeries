@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="64" height="36" tilewidth="16" tileheight="16" infinite="0" nextlayerid="2" nextobjectid="1">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="64" height="36" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="2">
  <tileset firstgid="1" source="../textures/text_texturemap.tsx"/>
- <layer id="1" name="Tile Layer 1" width="64" height="36">
+ <layer id="1" name="Ground" width="64" height="36">
   <properties>
    <property name="gunbulletcount" type="int" value="10"/>
    <property name="gunbulletforce" type="float" value="0.2"/>
@@ -51,4 +51,11 @@
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1
 </data>
  </layer>
+ <objectgroup id="2" name="Objects">
+  <object id="1" gid="2" x="688" y="384" width="16" height="16">
+   <properties>
+    <property name="text" value="Testing sign one two thr33"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

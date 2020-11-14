@@ -3,6 +3,8 @@ package com.hyacinth.scenes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
@@ -13,10 +15,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.hyacinth.Game;
-import com.hyacinth.entities.Bullet;
-import com.hyacinth.entities.Constants;
-import com.hyacinth.entities.DynamicEntity;
-import com.hyacinth.entities.Player;
+import com.hyacinth.entities.*;
+
+import java.util.Iterator;
 
 public class PlayingLevel {
     private TiledMap map;
@@ -34,8 +35,9 @@ public class PlayingLevel {
     public void initialize(TiledMap map){
         this.map = map;
         world = new World(new Vector2(0, -Constants.GRAVITY), true);
-        tiledBoxToBodies(map, world, "Tile Layer 1");
-        MapProperties properties = map.getLayers().get("Tile Layer 1").getProperties();
+        tiledBoxToBodies(map, world, "Ground");
+        loadObjects(map, world, "Objects");
+        MapProperties properties = map.getLayers().get("Ground").getProperties();
         Vector2 spawn = this.getSpawnLocation(properties);
         debugRenderer = new Box2DDebugRenderer();
         player = new Player(world, spawn, map.getProperties().get("tilewidth", Integer.class));
@@ -59,15 +61,22 @@ public class PlayingLevel {
         Vector2 playerPosition = new Vector2();
         world.getBodies(bodies);
         for (Body b : bodies) {
-            DynamicEntity entity = (DynamicEntity) b.getUserData();
-            if (entity != null) {
-                entity.update();
-                if (entity instanceof Player) {
-                    playerPosition = entity.getBody().getPosition();
+            if(b.getUserData() instanceof DynamicEntity) {
+                DynamicEntity entity = (DynamicEntity) b.getUserData();
+                if (entity != null) {
+                    entity.update();
+                    if (entity instanceof Player) {
+                        playerPosition = entity.getBody().getPosition();
+                    }
+                    if (!entity.getBody().isActive()) {
+                        //get it outta here
+                        world.destroyBody(entity.getBody());
+                    }
                 }
-                if(!entity.getBody().isActive()){
-                    //get it outta here
-                    world.destroyBody(entity.getBody());
+            }else if(b.getUserData() instanceof StaticEntity){
+                StaticEntity entity = (StaticEntity)b.getUserData();
+                if (entity != null){
+                    entity.update();
                 }
             }
         }
@@ -104,24 +113,58 @@ public class PlayingLevel {
                     bodyDef.type = BodyDef.BodyType.StaticBody;
                     Body body = world.createBody(bodyDef);
                     FixtureDef def = new FixtureDef();
-                    def.shape = getShapeFromRectangle(rectangle, tileWidth);
+                    def.shape = getShapeFromRectangle(rectangle);
                     def.density = .2f;
                     def.isSensor = false;
                     def.friction = 0.1f;
-                    body.setTransform(getTransformedCenterForRectangle(rectangle, map), 0);
+                    body.setTransform(getTransformedCenterForRectangle(rectangle), 0);
                     body.createFixture(def);
                 }
             }
         }
     }
 
-    public static Shape getShapeFromRectangle(Rectangle rectangle, float tileSize){
+    public void loadObjects(TiledMap map, World world, String layer){
+        MapObjects objects = map.getLayers().get(layer).getObjects();
+        for(int i = 0; i < objects.getCount(); i++){
+            MapObject curObject = objects.get(i);
+            MapProperties properties = curObject.getProperties();
+            Iterator<String> test = properties.getKeys();
+            while(test.hasNext()){
+                System.out.println(test.next());
+            }
+            float x = 0, y = 0, width = 0, height = 0;
+            if(properties.containsKey("x")){
+                x = (float)properties.get("x");
+            }else{
+                System.out.println("WARNING: Unable to find position of object ID " + i);
+            }
+            if(properties.containsKey("y")){
+                y = (float)properties.get("y");
+            }
+            if(properties.containsKey("width")){
+                width = (float)properties.get("width");
+            }
+            if(properties.containsKey("height")){
+                height = (float)properties.get("height");
+            }
+            if(properties.containsKey("text")){
+                //sign!
+                new Sign(world, x, y, width, height, (String)properties.get("text"));
+            }else{
+                //not sign :(
+
+            }
+        }
+    }
+
+    public static Shape getShapeFromRectangle(Rectangle rectangle){
         PolygonShape polygonShape = new PolygonShape();
         polygonShape.setAsBox(rectangle.width*0.5F,rectangle.height*0.5F);
         return polygonShape;
     }
 
-    public static Vector2 getTransformedCenterForRectangle(Rectangle rectangle, TiledMap map){
+    public static Vector2 getTransformedCenterForRectangle(Rectangle rectangle){
         Vector2 center = new Vector2();
         rectangle.getCenter(center);
         return center;
@@ -180,7 +223,8 @@ class GroundListener implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
-        if((contact.getFixtureA().isSensor() && contact.getFixtureB().getBody().getType() == BodyDef.BodyType.StaticBody) ||
+        if((contact.getFixtureA().isSensor() && contact.getFixtureA().getUserData() != null && contact.getFixtureA().getUserData() instanceof DynamicEntity
+                && contact.getFixtureB().getBody().getType() == BodyDef.BodyType.StaticBody) ||
                 (contact.getFixtureB().isSensor() && contact.getFixtureA().getBody().getType() == BodyDef.BodyType.StaticBody)){
             world.setPlayerGround(-1);
         }
@@ -188,6 +232,7 @@ class GroundListener implements ContactListener {
 
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
+
     }
 
     @Override
@@ -198,8 +243,10 @@ class GroundListener implements ContactListener {
 class BulletFilter implements ContactFilter {
     @Override
     public boolean shouldCollide(Fixture fixtureA, Fixture fixtureB) {
-        if((fixtureA.getBody().isBullet() && fixtureB.getBody().getUserData() != null && ((DynamicEntity)fixtureB.getBody().getUserData()).isPlayer())
-                || (fixtureB.getBody().isBullet() && fixtureA.getBody().getUserData() != null && ((DynamicEntity)fixtureA.getBody().getUserData()).isPlayer())){
+        if((fixtureA.getBody().isBullet() && fixtureB.getBody().getUserData() != null &&
+                fixtureB.getBody().getUserData() instanceof DynamicEntity && ((DynamicEntity)fixtureB.getBody().getUserData()).isPlayer())
+                || (fixtureB.getBody().isBullet() && fixtureA.getBody().getUserData() != null &&
+                fixtureA.getBody().getUserData() instanceof DynamicEntity && ((DynamicEntity)fixtureA.getBody().getUserData()).isPlayer())){
             return false;
         }
         return true;
