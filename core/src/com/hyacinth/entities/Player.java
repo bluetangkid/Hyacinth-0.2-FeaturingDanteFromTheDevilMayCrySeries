@@ -6,12 +6,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
 public class Player extends DynamicEntity {
+    private Gun gun;
     Body groundCheck;
     boolean onGround;
 
     public Player(World world){
         super(world, Constants.PLAYER_RESTITUTION, Constants.PLAYER_RADIUS, Constants.PLAYER_DENSITY, Constants.PLAYER_FRICTION, new Vector2(0, 0));
         this.getBody().setFixedRotation(true);
+        this.gun = new Gun();
         BodyDef def = new BodyDef();
         def.position.set(this.getBody().getPosition());
         def.type = BodyDef.BodyType.DynamicBody;
@@ -38,7 +40,11 @@ public class Player extends DynamicEntity {
             this.getBody().applyLinearImpulse(0, Constants.PLAYER_JUMP_FORCE*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)){
-            this.getBody().applyLinearImpulse(0, -.2f*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
+            this.getBody().applyLinearImpulse(0, -Constants.PLAYER_FASTFALL_SPEED*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
+        }
+        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
+            Vector2 gunForce = this.gun.fireGun(this.getBody().getPosition());
+            this.getBody().applyLinearImpulse(gunForce.x, gunForce.y, pos.x, pos.y, true);
         }
         groundCheck.setTransform(pos.x, pos.y - Constants.PLAYER_RADIUS - 5, 0);
         System.out.println(onGround);
@@ -51,7 +57,7 @@ public class Player extends DynamicEntity {
     private void capSpeed(float speed){
         // cap the player speed ONLY IF HOLDING LEFT OR RIGHT so movement is cooler
         if(this.getBody().getLinearVelocity().len() > Constants.PLAYER_MAX_SPEED){
-            this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().setLength(speed)); // gaming!!!
+            this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().setLength(speed));
         }
     }
 
