@@ -34,7 +34,7 @@ public class PlayingLevel {
         MapProperties properties = map.getLayers().get("Tile Layer 1").getProperties();
         Vector2 spawn = this.getSpawnLocation(properties);
         debugRenderer = new Box2DDebugRenderer();
-        player = new Player(world, spawn);
+        player = new Player(world, spawn, map.getProperties().get("tilewidth", Integer.class));
         this.createGun(properties);
         timeStep = 1f/ Gdx.graphics.getDisplayMode().refreshRate;
         BodyDef groundBodyDef = new BodyDef();
@@ -47,7 +47,6 @@ public class PlayingLevel {
         world.setContactListener(new GroundListener(this));
         world.setContactFilter(new BulletFilter());
         mapRenderer = new OrthogonalTiledMapRenderer(map);//TODO this might need to be passed in with the map to render
-        tiledBoxToBodies(map, world, "Tile Layer 1");
         Gdx.input.setCursorCatched(true);
     }
 
@@ -92,14 +91,17 @@ public class PlayingLevel {
         for (int i = 0; i < mapLayer.getWidth(); i++) {
             for (int j = 0; j < mapLayer.getHeight(); j++) {
                 if(mapLayer.getCell(i, j) != null) {
-                    // System.out.println(i + " " + j);
                     Rectangle rectangle = new Rectangle(i * tileWidth + mapLayer.getOffsetX(), j * tileWidth + mapLayer.getOffsetY(), tileWidth, tileWidth);
                     BodyDef bodyDef = new BodyDef();
                     bodyDef.type = BodyDef.BodyType.StaticBody;
                     Body body = world.createBody(bodyDef);
-                    Fixture fixture = body.createFixture(getShapeFromRectangle(rectangle, tileWidth), 0.2f);
-                    fixture.setFriction(0.1f);
+                    FixtureDef def = new FixtureDef();
+                    def.shape = getShapeFromRectangle(rectangle, tileWidth);
+                    def.density = .2f;
+                    def.isSensor = false;
+                    def.friction = 0.1f;
                     body.setTransform(getTransformedCenterForRectangle(rectangle, map), 0);
+                    body.createFixture(def);
                 }
             }
         }

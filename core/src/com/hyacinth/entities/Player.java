@@ -10,8 +10,9 @@ public class Player extends DynamicEntity {
     Body groundCheck;
     int onGround;
     short jumpTimer;
+    int tileWidth;
 
-    public Player(World world, Vector2 spawn){
+    public Player(World world, Vector2 spawn, int tileWidth){
         super(world, Constants.PLAYER_RESTITUTION, Constants.PLAYER_RADIUS, Constants.PLAYER_DENSITY, Constants.PLAYER_FRICTION, spawn);
         this.getBody().setFixedRotation(true);
         BodyDef def = new BodyDef();
@@ -23,12 +24,17 @@ public class Player extends DynamicEntity {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.isSensor = true;
+        MassData mass = new MassData();
+        mass.mass = 0;
+        groundCheck.setMassData(mass);
         groundCheck.createFixture(fixtureDef);
         this.isPlayer = true;
+        this.tileWidth = tileWidth;
     }
 
     public void update() {
         Vector2 pos = this.getBody().getPosition();
+        groundCheck.setTransform(pos.x, pos.y - (Constants.PLAYER_RADIUS) + tileWidth, 0);
         if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
             this.getBody().applyLinearImpulse(-Constants.PLAYER_IMPULSE_MUL, 0, pos.x, pos.y, true);
             this.capSpeed(Constants.PLAYER_MAX_SPEED);
@@ -51,7 +57,6 @@ public class Player extends DynamicEntity {
             //System.out.println((Gdx.input.getX() - Gdx.graphics.getWidth()/2) + " " + (Gdx.input.getY() - Gdx.graphics.getHeight()/2));
             this.getBody().applyLinearImpulse(gunForce.x, gunForce.y, pos.x, pos.y, true);
         }
-        groundCheck.setTransform(pos.x, pos.y - (Constants.PLAYER_RADIUS/2), 0);
         //System.out.println(onGround);
         if(this.jumpTimer > 0) this.jumpTimer--;
         this.gun.update();
