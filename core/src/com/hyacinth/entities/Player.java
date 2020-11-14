@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.*;
 public class Player extends DynamicEntity {
     private Gun gun;
     Body groundCheck;
-    boolean onGround;
+    int onGround;
     short jumpTimer;
 
     public Player(World world){
@@ -37,10 +37,10 @@ public class Player extends DynamicEntity {
             this.getBody().applyLinearImpulse(Constants.PLAYER_IMPULSE_MUL, 0, pos.x, pos.y, true);
             this.capSpeed(Constants.PLAYER_MAX_SPEED);
         }
-        if((Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.W)) && onGround && jumpTimer == 0){
+        if((Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.W)) && onGround > 0 && jumpTimer == 0){
             this.getBody().setTransform(pos.x, pos.y + 1, 0);
             this.getBody().applyLinearImpulse(0, Constants.PLAYER_JUMP_FORCE*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
-            jumpTimer = 20;
+            jumpTimer = 40;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)){
             this.getBody().applyLinearImpulse(0, -Constants.PLAYER_FASTFALL_SPEED*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
@@ -69,7 +69,7 @@ public class Player extends DynamicEntity {
         }
     }
 
-    public void setGround(boolean bruh){
-        this.onGround = bruh;
+    public void addGround(int bruh){
+        this.onGround += bruh;
     }
 }
