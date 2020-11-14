@@ -56,7 +56,7 @@ public class Game extends ApplicationAdapter {
 		cursor = new Texture(Gdx.files.internal("textures/cursor.png"));
 		levels = new PlayingLevel[(int)Gdx.files.internal("core/assets/levels/").list().length];
 		for (int i = 0; i < levels.length; i++){
-			levels[i] = new PlayingLevel(camera, loadMap("levels/level_" + i + ".tmx"));
+			levels[i] = new PlayingLevel(loadMap("levels/level_" + i + ".tmx"));
 		}
 		renderer = new TiledRenderer();
 		levelSelect = new LevelSelect(generator, levels);

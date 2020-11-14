@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.hyacinth.Game;
+import com.hyacinth.entities.Bullet;
 import com.hyacinth.entities.Constants;
 import com.hyacinth.entities.DynamicEntity;
 import com.hyacinth.entities.Player;
@@ -27,7 +28,10 @@ public class PlayingLevel {
     private Player player;
     private long time;
 
-    public PlayingLevel(OrthographicCamera camera, TiledMap map){
+    public PlayingLevel(TiledMap map){
+        initialize(map); // so that we can reset
+    }
+    public void initialize(TiledMap map){
         this.map = map;
         world = new World(new Vector2(0, -Constants.GRAVITY), true);
         tiledBoxToBodies(map, world, "Tile Layer 1");
@@ -37,13 +41,13 @@ public class PlayingLevel {
         player = new Player(world, spawn, map.getProperties().get("tilewidth", Integer.class));
         this.createGun(properties);
         timeStep = 1f/ Gdx.graphics.getDisplayMode().refreshRate;
-        BodyDef groundBodyDef = new BodyDef();
-        groundBodyDef.position.set(new Vector2(0, -70));
-        Body groundBody = world.createBody(groundBodyDef);
-        PolygonShape groundBox = new PolygonShape();
-        groundBox.setAsBox(camera.viewportWidth, 20.0f);
-        groundBody.createFixture(groundBox, 0.0f);
-        groundBox.dispose();
+//        BodyDef groundBodyDef = new BodyDef();
+//        groundBodyDef.position.set(new Vector2(0, -70));
+//        Body groundBody = world.createBody(groundBodyDef);
+//        PolygonShape groundBox = new PolygonShape();
+//        groundBox.setAsBox(camera.viewportWidth, 20.0f);
+//        groundBody.createFixture(groundBox, 0.0f);
+//        groundBox.dispose();
         world.setContactListener(new GroundListener(this));
         world.setContactFilter(new BulletFilter());
         mapRenderer = new OrthogonalTiledMapRenderer(map);//TODO this might need to be passed in with the map to render
@@ -82,6 +86,10 @@ public class PlayingLevel {
         while (accumulator >= timeStep) {
             world.step(timeStep, 6, 2);
             accumulator -= timeStep;
+        }
+
+        if(player.getBody().getPosition().y < -20){
+            reset();
         }
     }
 
@@ -149,6 +157,9 @@ public class PlayingLevel {
             reloadTime = (float)properties.get("gunreload");
         }
         player.createGun(bulletCount, bulletSpread, bulletForce, clipSize, reloadTime);
+    }
+    public void reset(){
+        this.initialize(map);
     }
 }
 
