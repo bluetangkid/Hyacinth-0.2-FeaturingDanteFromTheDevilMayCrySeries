@@ -1,19 +1,19 @@
 package com.hyacinth.desktop;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.Graphics;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.hyacinth.Game;
 
 public class DesktopLauncher {
-	static LwjglApplication application;
+	static Lwjgl3Application application;
 	public static void main (String[] arg) {
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.backgroundFPS = 30;
-		config.foregroundFPS = 60;
-		config.width = 1920;
-		config.height = 1080;
-		config.fullscreen = true;
-		application = new LwjglApplication(new Game(), config);
+		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+		config.setForegroundFPS(60);
+		config.setDecorated(false);
+		config.setWindowedMode(1920, 1080);
+		config.setResizable(false);
+		application = new Lwjgl3Application(new Game(), config);
 	}
 }
