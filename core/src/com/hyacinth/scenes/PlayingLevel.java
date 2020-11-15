@@ -60,7 +60,7 @@ public class PlayingLevel {
         lightPos[2] = new Vector2(450, 700);
         lightPos[3] = new Vector2(375, 450);
         lightPos[4] = new Vector2(100, 450);
-        sun = new PointLight(rayHandler, 13, new Color(1,1,1,.675f), 3000, 500, 600);
+        sun = new PointLight(rayHandler, 13, new Color(1,1,1,.65f), 3000, 500, 600);
     }
     public void initialize(TiledMap map){
         this.map = map;
