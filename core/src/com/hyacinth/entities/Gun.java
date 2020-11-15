@@ -70,4 +70,12 @@ public class Gun {
             clip = clipSize;
         }
     }
+
+    public int getBullets(){
+        return clip;
+    }
+
+    public int getReloadTime(){
+        return reloadTimer;
+    }
 }

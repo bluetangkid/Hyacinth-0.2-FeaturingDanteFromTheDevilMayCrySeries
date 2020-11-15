@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
@@ -36,6 +37,7 @@ public class PlayingLevel {
     private OrthographicCamera camera;
     private boolean spikes;
     BitmapFont signFont;
+    Ui ui;
 
     public PlayingLevel(TiledMap map, OrthographicCamera camera, FreeTypeFontGenerator fontGenerator){
         this.camera = camera;
@@ -56,7 +58,8 @@ public class PlayingLevel {
         //debugRenderer = new Box2DDebugRenderer();
         player = new Player(world, spawn, map.getProperties().get("tilewidth", Integer.class), camera);
         this.createGun(properties);
-        timeStep = 1f/ Gdx.graphics.getDisplayMode().refreshRate;
+        ui = new Ui(signFont, map.getLayers().get("Ground").getProperties());
+        timeStep = 1f/ 144;
 //        BodyDef groundBodyDef = new BodyDef();
 //        groundBodyDef.position.set(new Vector2(0, -70));
 //        Body groundBody = world.createBody(groundBodyDef);
@@ -100,6 +103,7 @@ public class PlayingLevel {
         }
         camera.position.x = playerPosition.x;
         camera.position.y = playerPosition.y;
+        ui.render(player);
         //debugRenderer.render(world, camera.combined);
 
         if(spikes){
@@ -240,12 +244,32 @@ public class PlayingLevel {
 }
 
 class Ui {
-    Ui(){
-
+    BitmapFont font;
+    float magSize, reloadTime;
+    String name;
+    SpriteBatch batch;
+    Ui(BitmapFont font, MapProperties properties){
+        this.font = font;
+        if(properties.containsKey("gunclip")){
+            magSize = (int)properties.get("gunclip");
+        }
+        if(properties.containsKey("gunreload")){
+            reloadTime = (float)properties.get("gunreload");
+        }
+        if(properties.containsKey("gunname")){
+            name = (String)properties.get("gunname");
+        }
+        batch = new SpriteBatch();
     }
 
-    void render() {
+    void render(Player player) {
+        int timeLeft = player.getGun().getReloadTime();
 
+        String data = name + "\n" + player.getGun().getBullets() + "/" + (int)magSize + " Bullets\n" +
+                (98-Math.round(100f*(timeLeft/60f/reloadTime))) + "% Reloaded";
+        batch.begin();
+        font.draw(batch, data, 20, 90);
+        batch.end();
     }
 }
 
