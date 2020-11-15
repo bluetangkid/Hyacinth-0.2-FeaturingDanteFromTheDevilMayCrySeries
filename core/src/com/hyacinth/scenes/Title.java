@@ -78,7 +78,13 @@ public class Title {
         rotation.scale(1f/scale, 1f/scale, 1f/scale);
 
         if(controls.doHe()) return GameState.CONTROLS;
-        credits.doHe();
+        if(credits.doHe()){
+            spriteCranberry.begin();
+            how.setText(disclaimer, "By: Warren Funk, Tyler Hempe, Sam Taylor, and Taro Sharkey");
+            disclaimer.draw(spriteCranberry, "By: Warren Funk, Tyler Hempe, Sam Taylor, and Taro Sharkey", Gdx.input.getX() - how.width, Gdx.graphics.getHeight() - Gdx.input.getY() + how.height * 2);
+            how.setText(subTitleFont, "Featuring Dante from the Devil May Cry Series");
+            spriteCranberry.end();
+        }
 
         if(play.doHe()) return GameState.LEVEL_SELECT;
         if(exit.doHe()) System.exit(0);

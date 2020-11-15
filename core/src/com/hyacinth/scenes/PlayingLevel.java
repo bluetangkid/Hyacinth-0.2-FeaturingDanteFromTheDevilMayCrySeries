@@ -40,6 +40,9 @@ public class PlayingLevel {
     private PointLight sun;
     BitmapFont signFont;
     Ui ui;
+    private long endTime;
+    private long startTime;
+    private static Vector2[] lightPos;
 
     public PlayingLevel(TiledMap map, OrthographicCamera camera, FreeTypeFontGenerator fontGenerator){
         this.camera = camera;
@@ -51,7 +54,13 @@ public class PlayingLevel {
         initialize(map); // so that we can reset
         rayHandler = new RayHandler(world);
         rayHandler.setAmbientLight(1f);
-        sun = new PointLight(rayHandler, 13, new Color(1,1,1,.5f), 3000, 500, 500);
+        lightPos = new Vector2[17];
+        lightPos[0] = new Vector2(950, 500);
+        lightPos[1] = new Vector2(600, 600);
+        lightPos[2] = new Vector2(450, 700);
+        lightPos[3] = new Vector2(375, 450);
+        lightPos[4] = new Vector2(100, 450);
+        sun = new PointLight(rayHandler, 13, new Color(1,1,1,.675f), 3000, 500, 600);
     }
     public void initialize(TiledMap map){
         this.map = map;
@@ -76,9 +85,24 @@ public class PlayingLevel {
         world.setContactFilter(new BulletFilter(this));
         mapRenderer = new OrthogonalTiledMapRenderer(map);
         Gdx.input.setCursorCatched(true);
+        startTime = System.currentTimeMillis();
+        endTime = System.currentTimeMillis();
     }
 
-    public int render(OrthographicCamera camera, TiledMapRenderer renderer){
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public long getElapsedTime(){
+        return endTime - startTime;
+    }
+
+    public void setEndTime(long end){
+        endTime = end;
+    }
+
+    public int render(OrthographicCamera camera, TiledMapRenderer renderer, int id){
+        if (lightPos[id] != null) sun.setPosition(lightPos[id]);
         Array<Body> bodies = new Array<>();
         Vector2 playerPosition = new Vector2();
         int levelComplete = 0;
