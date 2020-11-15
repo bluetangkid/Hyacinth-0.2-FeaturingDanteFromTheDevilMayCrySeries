@@ -32,7 +32,7 @@ public class Game extends ApplicationAdapter {
 	private TiledRenderer renderer;
 	private LevelSelect levelSelect;
 	private Music mainMusic;
-	private Texture bg;
+	private Texture bg, controlScheme;
 
 	@Override
 	public void create () {
@@ -59,6 +59,7 @@ public class Game extends ApplicationAdapter {
 		levelSelect = new LevelSelect(generator, levels);
 		bg = new Texture(Gdx.files.internal("data/textures/bg.png"));
 		bgbatch = new SpriteBatch();
+		controlScheme = new Texture(Gdx.files.internal("data/textures/controls.png"));
 	}
 
 	@Override
@@ -71,8 +72,9 @@ public class Game extends ApplicationAdapter {
 			bgbatch.begin();
 			bgbatch.draw(bg, -1280/(1.2f*2), -720/(1.2f*2), 1280/1.2f, 720/1.2f);
 			bgbatch.end();
-			if (title.draw(camera)) {
-				state = GameState.LEVEL_SELECT;
+			GameState status = title.draw(camera);
+			if (status != GameState.DEFAULT) {
+				state = status;
 			}
 		} else if(state == GameState.LEVEL_SELECT){
 			bgbatch.begin();
@@ -102,6 +104,10 @@ public class Game extends ApplicationAdapter {
 		} else if (state == GameState.COMPLETE) {
 			//TODO: complete screen
 			state = GameState.LEVEL_SELECT;
+		} else if (state == GameState.CONTROLS) {
+			batch.begin();
+			batch.draw(controlScheme, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			batch.end();
 		}
 
 		//at any point,

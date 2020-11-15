@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.hyacinth.GameState;
 import com.hyacinth.entities.Button;
 
 public class Title {
@@ -28,6 +29,7 @@ public class Title {
     GlyphLayout how;
     GlyphLayout titleLayout;
     Button controls, credits, play, exit;
+
 
     public Title(FreeTypeFontGenerator generator) {
         FreeTypeFontParameter title = new FreeTypeFontParameter();
@@ -58,7 +60,7 @@ public class Title {
         exit = new Button(button, "Exit", disclaimer, new Vector2(50 + (56*2), 30));
     }
 
-    public boolean draw(Camera c) {
+    public GameState draw(Camera c) {
         spriteCranberry.begin();
         titleFont.draw(spriteCranberry, "Hyacinth 0.2", 1920/2 - titleLayout.width/2, 1080/1.35f - titleLayout.height/2);
         spriteCranberry.end();
@@ -75,15 +77,15 @@ public class Title {
         rotation.trn(-1350, -670, 0);
         rotation.scale(1f/scale, 1f/scale, 1f/scale);
 
-        controls.doHe();
+        if(controls.doHe()) return GameState.CONTROLS;
         credits.doHe();
 
-        if(play.doHe()) return true;
+        if(play.doHe()) return GameState.LEVEL_SELECT;
         if(exit.doHe()) System.exit(0);
 
         scale += scaleDir ? -.003 : .003;
         if(scale < .85 || scale > 1.15) scaleDir = !scaleDir;
 
-        return false;
+        return GameState.DEFAULT;
     }
 }
