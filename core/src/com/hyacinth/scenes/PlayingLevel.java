@@ -110,7 +110,7 @@ public class PlayingLevel {
     }
 
     private void doPhysicsStep(float deltaTime) {
-        float frameTime = Math.min(deltaTime, 0.1f);
+        float frameTime = Math.min(deltaTime/100, 0.25f);
         accumulator += frameTime;
         time = System.currentTimeMillis();
         while (accumulator >= timeStep) {
