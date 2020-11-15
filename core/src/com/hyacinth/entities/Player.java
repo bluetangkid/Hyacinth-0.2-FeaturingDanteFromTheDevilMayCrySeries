@@ -34,7 +34,9 @@ public class Player extends DynamicEntity {
 
     public Player(World world, Vector2 spawn, int tileWidth, OrthographicCamera camera){
         super(world, Constants.PLAYER_RESTITUTION, Constants.PLAYER_RADIUS, Constants.PLAYER_DENSITY, Constants.PLAYER_FRICTION, spawn);
+        this.body.setUserData(this);
         this.getBody().setFixedRotation(true);
+        this.isPlayer = true;
         BodyDef def = new BodyDef();
         def.position.set(this.getBody().getPosition());
         def.type = BodyDef.BodyType.DynamicBody;
@@ -48,6 +50,8 @@ public class Player extends DynamicEntity {
         mass.mass = 0;
         groundCheck.setMassData(mass);
         groundCheck.createFixture(fixtureDef);
+
+        //System.out.println((this.getBody().getUserData() instanceof DynamicEntity) + " " + this.isPlayer());
 
         Vector2 bodyPos = this.getBody().getPosition();
         BodyDef lArmDef = new BodyDef();
@@ -82,7 +86,6 @@ public class Player extends DynamicEntity {
         rArm.setMassData(rmass);
         rArm.createFixture(lArmFix);
 
-        this.isPlayer = true;
         this.tileWidth = tileWidth;
         this.collidingEntities = new ArrayList<>();
         atlas = new TextureAtlas(Gdx.files.internal("data/textures/player.atlas"));

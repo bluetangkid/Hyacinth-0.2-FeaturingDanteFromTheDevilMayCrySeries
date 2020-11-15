@@ -56,7 +56,7 @@ public class PlayingLevel {
         //debugRenderer = new Box2DDebugRenderer();
         player = new Player(world, spawn, map.getProperties().get("tilewidth", Integer.class), camera);
         this.createGun(properties);
-        timeStep = 1f/ Gdx.graphics.getDisplayMode().refreshRate;
+        timeStep = 1f/60f;
 //        BodyDef groundBodyDef = new BodyDef();
 //        groundBodyDef.position.set(new Vector2(0, -70));
 //        Body groundBody = world.createBody(groundBodyDef);

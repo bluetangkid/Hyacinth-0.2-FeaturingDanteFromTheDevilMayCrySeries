@@ -11,7 +11,7 @@ public class Constants {
     public static final float PLAYER_FRICTION = 2.4f;
     public static final float PLAYER_RESTITUTION = 0.05f;
     public static final float PLAYER_JUMP_FORCE = 0.6f;
-    public static final short PLAYER_JUMP_TIMER = 40;
+    public static final short PLAYER_JUMP_TIMER = 10;
     public static final float PLAYER_IMPULSE_MUL = 2500f;
     public static final float PLAYER_MAX_SPEED = 15f;
     public static final float PLAYER_FASTFALL_SPEED = 0.05f;
