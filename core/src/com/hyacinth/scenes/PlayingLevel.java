@@ -54,11 +54,11 @@ public class PlayingLevel {
 //        groundBox.dispose();
         world.setContactListener(new GroundListener(this));
         world.setContactFilter(new BulletFilter(this));
-        mapRenderer = new OrthogonalTiledMapRenderer(map);//TODO this might need to be passed in with the map to render
+        mapRenderer = new OrthogonalTiledMapRenderer(map);
         Gdx.input.setCursorCatched(true);
     }
 
-    public void render(OrthographicCamera camera, TiledMapRenderer renderer){
+    public int render(OrthographicCamera camera, TiledMapRenderer renderer){
         Array<Body> bodies = new Array<>();
         Vector2 playerPosition = new Vector2();
         world.getBodies(bodies);
@@ -88,6 +88,7 @@ public class PlayingLevel {
         doPhysicsStep(System.currentTimeMillis() - time);
         mapRenderer.setView(camera);
         mapRenderer.render();
+        return 0;
     }
 
     private void doPhysicsStep(float deltaTime) {
@@ -185,7 +186,7 @@ public class PlayingLevel {
 
     public Vector2 getSpawnLocation(MapProperties properties){
         if(properties.containsKey("spawnX") && properties.containsKey("spawnY")){
-            return new Vector2((int)properties.get("spawnX"), (int)properties.get("spawnY") + 5);
+            return new Vector2((int)properties.get("spawnX"), (int)properties.get("spawnY"));
         }
         return new Vector2();
     }

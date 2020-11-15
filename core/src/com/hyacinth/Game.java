@@ -90,7 +90,7 @@ public class Game extends ApplicationAdapter {
 			bgbatch.end();
 			int selection = levelSelect.draw(camera);
 			if (selection > 0){
-				level = selection;
+				level = 1;
 				state = GameState.GAME;
 				mainMusic.play();
 			}
@@ -98,7 +98,7 @@ public class Game extends ApplicationAdapter {
 			bgbatch.begin();
 			bgbatch.draw(bg, 0, 0, 1024, 576);
 			bgbatch.end();
-			levels[0].render(camera, renderer);
+			level += levels[level].render(camera, renderer);
 		}
 		batch.begin();
 		batch.draw(cursor, Gdx.input.getX() - 7, 1080 - Gdx.input.getY() - 7);
