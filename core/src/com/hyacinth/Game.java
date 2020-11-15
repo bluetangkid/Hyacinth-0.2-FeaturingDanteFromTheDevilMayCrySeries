@@ -3,6 +3,7 @@ package com.hyacinth;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.*;
@@ -18,6 +19,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.hyacinth.entities.Constants;
@@ -90,6 +92,7 @@ public class Game extends ApplicationAdapter {
 			int selection = levelSelect.draw(camera);
 			if (selection >= 0){
 				level = selection;
+				levels[level].reset();
 				state = GameState.GAME;
 				mainMusic.play();
 			}
@@ -101,16 +104,25 @@ public class Game extends ApplicationAdapter {
 			if(status > 0){
 				state = GameState.COMPLETE;
 			}else if(status < 0){
-				levels[level].reset();
 				state = GameState.DEATH;
 			}
 		} else if(state == GameState.DEATH) {
 			//TODO: death screen
+			levels[level].reset();
 			state = GameState.GAME;
 		} else if (state == GameState.COMPLETE) {
 			//TODO: complete screen
 			state = GameState.LEVEL_SELECT;
 		}
+
+		//at any point,
+		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+			state = GameState.TITLE;
+			camera.position.x = 0;
+			camera.position.y = 0;
+			camera.position.z = 0;
+		}
+
 		batch.begin();
 		batch.draw(cursor, Gdx.input.getX() - 7, 1080 - Gdx.input.getY() - 7);
 		batch.end();
