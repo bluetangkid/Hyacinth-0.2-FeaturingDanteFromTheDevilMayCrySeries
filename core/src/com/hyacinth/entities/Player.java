@@ -156,7 +156,7 @@ public class Player extends DynamicEntity {
         //System.out.println(this.onGround);
         if((Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.W)) && this.onGround > 0 && this.jumpTimer == 0){
             this.getBody().setTransform(pos.x, pos.y + 1, 0);
-            this.getBody().applyLinearImpulse(0, Constants.PLAYER_JUMP_FORCE*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
+            this.getBody().applyLinearImpulse(0, Constants.PLAYER_JUMP_FORCE*5000, pos.x, pos.y, true);
             this.jumpTimer = Constants.PLAYER_JUMP_TIMER;
             curFrame = jump.getKeyFrame(animTime);
             if(state != PlayerState.JUMPING) {
@@ -173,7 +173,7 @@ public class Player extends DynamicEntity {
             //System.out.println((Gdx.input.getX() - Gdx.graphics.getWidth()/2) + " " + (Gdx.input.getY() - Gdx.graphics.getHeight()/2));
             this.getBody().applyLinearImpulse(gunForce.x, gunForce.y, pos.x, pos.y, true);
         }
-        if(Gdx.input.isKeyJustPressed(Input.Keys.X)){
+        if(Gdx.input.isKeyPressed(Input.Keys.X)){
             System.out.println(collidingEntities.size());
             for(StaticEntity e : collidingEntities){
                 if(e instanceof Sign){
