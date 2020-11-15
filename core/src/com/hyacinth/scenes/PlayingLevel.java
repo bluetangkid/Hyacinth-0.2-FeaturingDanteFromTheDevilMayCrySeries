@@ -61,12 +61,13 @@ public class PlayingLevel {
     public int render(OrthographicCamera camera, TiledMapRenderer renderer){
         Array<Body> bodies = new Array<>();
         Vector2 playerPosition = new Vector2();
+        int levelComplete = 0;
         world.getBodies(bodies);
         for (Body b : bodies) {
             if(b.getUserData() instanceof DynamicEntity) {
                 DynamicEntity entity = (DynamicEntity) b.getUserData();
                 if (entity != null) {
-                    entity.update();
+                    levelComplete += entity.update();
                     if (entity instanceof Player) {
                         playerPosition = entity.getBody().getPosition();
                     }
@@ -88,7 +89,7 @@ public class PlayingLevel {
         doPhysicsStep(System.currentTimeMillis() - time);
         mapRenderer.setView(camera);
         mapRenderer.render();
-        return 0;
+        return levelComplete;
     }
 
     private void doPhysicsStep(float deltaTime) {

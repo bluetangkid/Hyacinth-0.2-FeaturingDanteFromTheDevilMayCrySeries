@@ -25,7 +25,7 @@ public class Bullet extends DynamicEntity {
         image = new Texture(Gdx.files.internal("data/textures/cannonball.png"));
         this.camera = camera;
     }
-    public void update() {
+    public int update() {
         this.timer++;
         if(this.getBody().getLinearVelocity().len() < Constants.BULLET_MIN_VELOCITY || this.getBody().getPosition().y < -5000){
             this.getBody().setActive(false);
@@ -35,6 +35,7 @@ public class Bullet extends DynamicEntity {
         batch.begin();
         batch.draw(image, pos.x, pos.y, 4, 4);
         batch.end();
+        return 0;
     }
 
     public void draw() {

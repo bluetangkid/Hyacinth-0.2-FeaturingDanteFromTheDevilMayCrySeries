@@ -26,7 +26,7 @@ import com.hyacinth.entities.Player;
 import com.hyacinth.scenes.LevelSelect;
 import com.hyacinth.scenes.PlayingLevel;
 import com.hyacinth.scenes.Title;
-import org.graalvm.compiler.lir.amd64.AMD64Binary;
+//import org.graalvm.compiler.lir.amd64.AMD64Binary;
 
 import java.util.ArrayList;
 
@@ -90,7 +90,7 @@ public class Game extends ApplicationAdapter {
 			bgbatch.end();
 			int selection = levelSelect.draw(camera);
 			if (selection > 0){
-				level = 1;
+				level = selection;
 				state = GameState.GAME;
 				mainMusic.play();
 			}
@@ -98,7 +98,12 @@ public class Game extends ApplicationAdapter {
 			bgbatch.begin();
 			bgbatch.draw(bg, 0, 0, 1024, 576);
 			bgbatch.end();
-			level += levels[level].render(camera, renderer);
+			if(levels[level].render(camera, renderer) != 0){
+				state = GameState.COMPLETE;
+			}
+		} else if (state == GameState.COMPLETE) {
+			//TODO: complete screen
+			state = GameState.LEVEL_SELECT;
 		}
 		batch.begin();
 		batch.draw(cursor, Gdx.input.getX() - 7, 1080 - Gdx.input.getY() - 7);

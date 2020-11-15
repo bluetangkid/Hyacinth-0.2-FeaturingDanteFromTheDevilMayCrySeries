@@ -24,13 +24,13 @@ public abstract class DynamicEntity {
         this.body.setUserData(this);
     }
 
-    public boolean isPlayer(){return isPlayer;};
+    public boolean isPlayer(){ return isPlayer; };
 
     public Body getBody (){
         return body;
     }
 
-    public abstract void update();
+    public abstract int update();
 
     public abstract void draw();
 }

@@ -105,7 +105,7 @@ public class Player extends DynamicEntity {
         this.camera = camera;
     }
 
-    public void update() {
+    public int update() {
         Vector2 pos = this.getBody().getPosition();
         TextureRegion curFrame = idle.getKeyFrame(animTime);
 
@@ -178,6 +178,8 @@ public class Player extends DynamicEntity {
             for(StaticEntity e : collidingEntities){
                 if(e instanceof Sign){
                     ((Sign) e).displayText();
+                }else if(e instanceof ExitStar){
+                    return 1;
                 }
             }
         }
@@ -198,9 +200,10 @@ public class Player extends DynamicEntity {
             curFrame = idle.getKeyFrame(animTime);
         }
         batch.begin();
-        batch.draw(curFrame, Gdx.graphics.getWidth()/2 - 18, Gdx.graphics.getHeight()/2 - 8);
+        batch.draw(curFrame, (float)Gdx.graphics.getWidth()/2 - 18, (float)Gdx.graphics.getHeight()/2 - 8);
         batch.end();
         animTime += Gdx.graphics.getDeltaTime();
+        return 0;
     }
 
     public void draw() {
@@ -225,9 +228,7 @@ public class Player extends DynamicEntity {
         collidingEntities.add(entity);
     }
     public void removeCollidingEntity(StaticEntity entity){
-        if(collidingEntities.contains(entity)) {
-            collidingEntities.remove(entity);
-        }
+        collidingEntities.remove(entity);
     }
     public void resetCollidingEntity(){
         collidingEntities = new ArrayList<>();
