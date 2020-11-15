@@ -23,7 +23,9 @@ public class Gun {
         this.clip = this.clipSize;
         this.reloadTimer = 0;
         this.reloadTime = reloadTime;
-        this.firerate = firerate * (Gdx.graphics.getFramesPerSecond()/60);
+        //System.out.println((float)Gdx.graphics.getDisplayMode().refreshRate/60f);
+        this.firerate = (int)Math.ceil(firerate * ((float)Gdx.graphics.getDisplayMode().refreshRate/60f));
+        //System.out.println(this.firerate);
         this.bullets = new ArrayList<>();
         this.fireTimer = 0;
     }
