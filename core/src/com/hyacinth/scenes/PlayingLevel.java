@@ -55,7 +55,7 @@ public class PlayingLevel {
         loadObjects(map, world, "Objects");
         MapProperties properties = map.getLayers().get("Ground").getProperties();
         Vector2 spawn = this.getSpawnLocation(properties);
-        //debugRenderer = new Box2DDebugRenderer();
+        debugRenderer = new Box2DDebugRenderer();
         player = new Player(world, spawn, map.getProperties().get("tilewidth", Integer.class), camera);
         this.createGun(properties);
         ui = new Ui(signFont, map.getLayers().get("Ground").getProperties());
@@ -104,7 +104,7 @@ public class PlayingLevel {
         camera.position.x = playerPosition.x;
         camera.position.y = playerPosition.y;
         ui.render(player);
-        //debugRenderer.render(world, camera.combined);
+        debugRenderer.render(world, camera.combined);
 
         if(spikes){
             levelComplete--;

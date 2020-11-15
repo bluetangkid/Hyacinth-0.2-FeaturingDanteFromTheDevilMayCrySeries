@@ -118,9 +118,12 @@ public class Player extends DynamicEntity {
         Vector2 pos = this.getBody().getPosition();
         TextureRegion curFrame = idle.getKeyFrame(animTime);
 
-        groundCheck.setTransform(pos.x, pos.y - (Constants.PLAYER_RADIUS) + 8, 0);
+        groundCheck.setTransform(pos.x, pos.y - (Constants.PLAYER_RADIUS) - 1, 0);
+        groundCheck.setLinearVelocity(0, 0);
         lArm.setTransform(pos.x - Constants.PLAYER_RADIUS - Constants.PLAYER_RADIUS/3, pos.y, 0);
+        lArm.setLinearVelocity(0, 0);
         rArm.setTransform(pos.x + Constants.PLAYER_RADIUS + Constants.PLAYER_RADIUS/3, pos.y, 0);
+        rArm.setLinearVelocity(0, 0);
         if((Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) && this.getBody().getLinearVelocity().x > -Constants.PLAYER_MAX_SPEED){
             this.getBody().applyLinearImpulse(-Constants.PLAYER_IMPULSE_MUL, 0, pos.x, pos.y, true);
             this.capSpeed(Constants.PLAYER_MAX_SPEED);
