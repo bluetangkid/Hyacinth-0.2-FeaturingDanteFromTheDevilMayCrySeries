@@ -2,7 +2,10 @@ package com.hyacinth.scenes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.MapProperties;
@@ -32,10 +35,15 @@ public class PlayingLevel {
     private long time;
     private OrthographicCamera camera;
     private boolean spikes;
+    BitmapFont signFont;
 
-    public PlayingLevel(TiledMap map, OrthographicCamera camera){
+    public PlayingLevel(TiledMap map, OrthographicCamera camera, FreeTypeFontGenerator fontGenerator){
         this.camera = camera;
         this.spikes = false;
+        FreeTypeFontGenerator.FreeTypeFontParameter params = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        params.color = Color.LIGHT_GRAY;
+        params.size = 22;
+        signFont = fontGenerator.generateFont(params);
         initialize(map); // so that we can reset
     }
     public void initialize(TiledMap map){
@@ -66,7 +74,10 @@ public class PlayingLevel {
         Array<Body> bodies = new Array<>();
         Vector2 playerPosition = new Vector2();
         int levelComplete = 0;
+        doPhysicsStep(System.currentTimeMillis() - time);
         world.getBodies(bodies);
+        mapRenderer.setView(camera);
+        mapRenderer.render();
         for (Body b : bodies) {
             if(b.getUserData() instanceof DynamicEntity) {
                 DynamicEntity entity = (DynamicEntity) b.getUserData();
@@ -163,7 +174,7 @@ public class PlayingLevel {
             }
             if(properties.containsKey("text")){
                 //sign!
-                new Sign(world, x, y, width, height, (String)properties.get("text"));
+                new Sign(world, x, y, width, height, (String)properties.get("text"), signFont);
             }else if(properties.containsKey("exit")){
                 //not sign :(
                 new ExitStar(world, x, y, width, height);
@@ -230,6 +241,16 @@ public class PlayingLevel {
     public void hitSpikes() { this.spikes = true; }
 }
 
+class Ui {
+    Ui(){
+
+    }
+
+    void render() {
+
+    }
+}
+
 class GroundListener implements ContactListener {
     PlayingLevel world;
 
@@ -239,8 +260,9 @@ class GroundListener implements ContactListener {
 
     @Override
     public void beginContact(Contact contact) {
-        if((contact.getFixtureA().isSensor() && contact.getFixtureB().getBody().getType() == BodyDef.BodyType.StaticBody) ||
-                (contact.getFixtureB().isSensor() && contact.getFixtureA().getBody().getType() == BodyDef.BodyType.StaticBody)){
+        if(((contact.getFixtureA().isSensor() && contact.getFixtureB().getBody().getType() == BodyDef.BodyType.StaticBody) ||
+                (contact.getFixtureB().isSensor() && contact.getFixtureA().getBody().getType() == BodyDef.BodyType.StaticBody)) &&
+                !contact.getFixtureA().getBody().isBullet() && !contact.getFixtureB().getBody().isBullet()){
             world.setPlayerGround(1);
         }
         if (isPlayer(contact.getFixtureA()) && isStaticEntity(contact.getFixtureB())){
@@ -252,8 +274,9 @@ class GroundListener implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
-        if((contact.getFixtureA().isSensor() && contact.getFixtureB().getBody().getType() == BodyDef.BodyType.StaticBody) ||
-                (contact.getFixtureB().isSensor() && contact.getFixtureA().getBody().getType() == BodyDef.BodyType.StaticBody)){
+        if(((contact.getFixtureA().isSensor() && contact.getFixtureB().getBody().getType() == BodyDef.BodyType.StaticBody) ||
+                (contact.getFixtureB().isSensor() && contact.getFixtureA().getBody().getType() == BodyDef.BodyType.StaticBody)) &&
+                !contact.getFixtureA().getBody().isBullet() && !contact.getFixtureB().getBody().isBullet()){
             world.setPlayerGround(-1);
         }
         if (isPlayer(contact.getFixtureA()) && isStaticEntity(contact.getFixtureB())){

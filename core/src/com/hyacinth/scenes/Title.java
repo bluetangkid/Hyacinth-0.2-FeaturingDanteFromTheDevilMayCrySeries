@@ -27,6 +27,7 @@ public class Title {
 
     public Title(FreeTypeFontGenerator generator) {
         FreeTypeFontParameter title = new FreeTypeFontParameter();
+        title.color = Color.DARK_GRAY;
         title.size = 110;
         title.kerning = false;
         titleFont = generator.generateFont(title);
