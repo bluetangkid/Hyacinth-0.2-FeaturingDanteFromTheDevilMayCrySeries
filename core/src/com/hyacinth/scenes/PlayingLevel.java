@@ -1,5 +1,7 @@
 package com.hyacinth.scenes;
 
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -16,9 +18,11 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Array;
 import com.hyacinth.entities.*;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class PlayingLevel {
@@ -32,6 +36,8 @@ public class PlayingLevel {
     private long time;
     private OrthographicCamera camera;
     private boolean spikes;
+    private RayHandler rayHandler;
+    private PointLight sun;
     BitmapFont signFont;
     Ui ui;
 
@@ -43,6 +49,9 @@ public class PlayingLevel {
         params.size = 22;
         signFont = fontGenerator.generateFont(params);
         initialize(map); // so that we can reset
+        rayHandler = new RayHandler(world);
+        rayHandler.setAmbientLight(1f);
+        sun = new PointLight(rayHandler, 13, new Color(1,1,1,.5f), 3000, 500, 500);
     }
     public void initialize(TiledMap map){
         this.map = map;
@@ -106,6 +115,9 @@ public class PlayingLevel {
             levelComplete--;
             spikes = false;
         }
+        sun.update();
+        rayHandler.setCombinedMatrix(camera.combined, 0, 0, 1280/1.2f, 720/1.2f);
+        rayHandler.updateAndRender();
         return levelComplete;
     }
 

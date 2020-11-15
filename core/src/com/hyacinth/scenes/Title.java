@@ -5,13 +5,16 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.hyacinth.entities.Button;
 
 public class Title {
     BitmapFont titleFont;
@@ -24,6 +27,7 @@ public class Title {
     boolean scaleDir = true;
     GlyphLayout how;
     GlyphLayout titleLayout;
+    Button controls, credits, play, exit;
 
     public Title(FreeTypeFontGenerator generator) {
         FreeTypeFontParameter title = new FreeTypeFontParameter();
@@ -38,6 +42,8 @@ public class Title {
         sub.kerning = false;
         sub.color = Color.GOLD;
         subTitleFont = generator.generateFont(sub);
+        sub.color = Color.WHITE;
+        disclaimer = generator.generateFont(sub);
         how = new GlyphLayout();
         how.setText(subTitleFont, "Featuring Dante from the Devil May Cry series");
         spriteCranberry = new SpriteBatch();
@@ -45,6 +51,11 @@ public class Title {
         //rotation.trn(-how.width/2, -how.height/2, 0);
         //rotation.rotate(new Vector3(0, 0, 1), -50);
         baseMatrix = spriteCranberry.getTransformMatrix().cpy();
+        Texture button = new Texture(Gdx.files.internal("data/textures/long_button.png"));
+        controls = new Button(button, "Controls", disclaimer, new Vector2(1920/2, 350));
+        credits = new Button(button, "Credits", disclaimer, new Vector2(1920-(56*2) - 50, 30));
+        play = new Button(button, "Play", disclaimer, new Vector2(1920/2, 500));
+        exit = new Button(button, "Exit", disclaimer, new Vector2(50 + (56*2), 30));
     }
 
     public boolean draw(Camera c) {
@@ -64,12 +75,15 @@ public class Title {
         rotation.trn(-1350, -670, 0);
         rotation.scale(1f/scale, 1f/scale, 1f/scale);
 
+        controls.doHe();
+        credits.doHe();
+
+        if(play.doHe()) return true;
+        if(exit.doHe()) System.exit(0);
+
         scale += scaleDir ? -.003 : .003;
         if(scale < .85 || scale > 1.15) scaleDir = !scaleDir;
 
-        if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            return true;
-        }
         return false;
     }
 }
