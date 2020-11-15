@@ -54,12 +54,16 @@ public class PlayingLevel {
         initialize(map); // so that we can reset
         rayHandler = new RayHandler(world);
         rayHandler.setAmbientLight(1f);
-        lightPos = new Vector2[17];
+        lightPos = new Vector2[18];
         lightPos[0] = new Vector2(950, 500);
         lightPos[1] = new Vector2(600, 600);
         lightPos[2] = new Vector2(450, 700);
         lightPos[3] = new Vector2(375, 450);
         lightPos[4] = new Vector2(100, 450);
+        lightPos[5] = new Vector2(600, 350);
+        lightPos[6] = new Vector2(600, 350);
+        lightPos[7] = new Vector2(950, 500);
+        lightPos[8] = new Vector2(550, 500);
         sun = new PointLight(rayHandler, 13, new Color(1,1,1,.65f), 3000, 500, 600);
     }
     public void initialize(TiledMap map){
