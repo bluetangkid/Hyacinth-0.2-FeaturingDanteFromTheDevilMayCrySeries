@@ -28,8 +28,10 @@ public class PlayingLevel {
     private float timeStep;
     private Player player;
     private long time;
+    private OrthographicCamera camera;
 
-    public PlayingLevel(TiledMap map){
+    public PlayingLevel(TiledMap map, OrthographicCamera camera){
+        this.camera = camera;
         initialize(map); // so that we can reset
     }
     public void initialize(TiledMap map){
@@ -40,7 +42,7 @@ public class PlayingLevel {
         MapProperties properties = map.getLayers().get("Ground").getProperties();
         Vector2 spawn = this.getSpawnLocation(properties);
         //debugRenderer = new Box2DDebugRenderer();
-        player = new Player(world, spawn, map.getProperties().get("tilewidth", Integer.class));
+        player = new Player(world, spawn, map.getProperties().get("tilewidth", Integer.class), camera);
         this.createGun(properties);
         timeStep = 1f/ Gdx.graphics.getDisplayMode().refreshRate;
 //        BodyDef groundBodyDef = new BodyDef();

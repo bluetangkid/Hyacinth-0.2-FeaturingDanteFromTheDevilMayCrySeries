@@ -2,6 +2,8 @@ package com.hyacinth.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -28,8 +30,9 @@ public class Player extends DynamicEntity {
     private static final float animSpeed = .17f;
     boolean direction;
     Body lArm, rArm;
+    OrthographicCamera camera;
 
-    public Player(World world, Vector2 spawn, int tileWidth){
+    public Player(World world, Vector2 spawn, int tileWidth, OrthographicCamera camera){
         super(world, Constants.PLAYER_RESTITUTION, Constants.PLAYER_RADIUS, Constants.PLAYER_DENSITY, Constants.PLAYER_FRICTION, spawn);
         this.getBody().setFixedRotation(true);
         BodyDef def = new BodyDef();
@@ -82,10 +85,10 @@ public class Player extends DynamicEntity {
         this.isPlayer = true;
         this.tileWidth = tileWidth;
         this.collidingEntities = new ArrayList<>();
-        atlas = new TextureAtlas(Gdx.files.internal("textures/player.atlas"));
+        atlas = new TextureAtlas(Gdx.files.internal("data/textures/player.atlas"));
         running = new Animation<TextureRegion>(animSpeed, atlas.findRegions("run"), Animation.PlayMode.LOOP);
         jump = new Animation<TextureRegion>(animSpeed, atlas.findRegions("jump"), Animation.PlayMode.NORMAL);
-        idle = new Animation<TextureRegion>(animSpeed, atlas.findRegions("idle"), Animation.PlayMode.LOOP);
+        idle = new Animation<TextureRegion>(0.46f, atlas.findRegions("idle"), Animation.PlayMode.LOOP);
         this.batch = new SpriteBatch();
         state = PlayerState.IDLE;
         animTime = animSpeed;
@@ -99,6 +102,7 @@ public class Player extends DynamicEntity {
         for (TextureRegion region : jump.getKeyFrames()){
             region.flip(true, false);
         }
+        this.camera = camera;
     }
 
     public void update() {
@@ -165,7 +169,7 @@ public class Player extends DynamicEntity {
             this.getBody().applyLinearImpulse(0, -Constants.PLAYER_FASTFALL_SPEED*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
         }
         if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && !(this.gun == null)){
-            Vector2 gunForce = this.gun.fireGun(new Vector2(Gdx.input.getX() - (float)Gdx.graphics.getWidth()/2, Gdx.input.getY() - (float)Gdx.graphics.getHeight()/2), this.getBody().getPosition()).scl(Constants.GUN_FORCE_STATIC_MULT);
+            Vector2 gunForce = this.gun.fireGun(new Vector2(Gdx.input.getX() - (float)Gdx.graphics.getWidth()/2, Gdx.input.getY() - (float)Gdx.graphics.getHeight()/2), this.getBody().getPosition(), camera).scl(Constants.GUN_FORCE_STATIC_MULT);
             //System.out.println((Gdx.input.getX() - Gdx.graphics.getWidth()/2) + " " + (Gdx.input.getY() - Gdx.graphics.getHeight()/2));
             this.getBody().applyLinearImpulse(gunForce.x, gunForce.y, pos.x, pos.y, true);
         }
@@ -194,7 +198,7 @@ public class Player extends DynamicEntity {
             curFrame = idle.getKeyFrame(animTime);
         }
         batch.begin();
-        batch.draw(curFrame, Gdx.graphics.getWidth()/2 - 18, Gdx.graphics.getHeight()/2 - 11);
+        batch.draw(curFrame, Gdx.graphics.getWidth()/2 - 18, Gdx.graphics.getHeight()/2 - 8);
         batch.end();
         animTime += Gdx.graphics.getDeltaTime();
     }

@@ -1,6 +1,8 @@
 package com.hyacinth.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
@@ -26,7 +28,7 @@ public class Gun {
         this.bullets = new ArrayList<>();
         this.fireTimer = 0;
     }
-    public Vector2 fireGun(Vector2 direction, Vector2 position) {
+    public Vector2 fireGun(Vector2 direction, Vector2 position, OrthographicCamera camera) {
         //directions should be the position of the mouse relative to the player
         //returns the force to be applied on the user
         //get the unit vector of the force (which is just opposite the direction)
@@ -44,7 +46,7 @@ public class Gun {
                 //then make the bullet for real
                 this.bullets.add(new Bullet(this.world,
                         (thisDirection).scl(-1),
-                        new Vector2(position).add(thisDirection.nor().scl(Constants.PLAYER_RADIUS))));
+                        new Vector2(position).add(thisDirection.nor().scl(Constants.PLAYER_RADIUS)), camera));
             }
             clip--;
             fireTimer = firerate;
