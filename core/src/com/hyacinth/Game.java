@@ -51,6 +51,10 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void create () {
+		Gdx.graphics.setUndecorated(true);
+		Gdx.graphics.setWindowedMode(Gdx.graphics.getDisplayMode().width, Gdx.graphics.getDisplayMode().height);
+		Gdx.gl.glViewport(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight());
+		Gdx.graphics.setTitle("Hyacinth 0.2");
 		state = GameState.TITLE;
 		generator = new FreeTypeFontGenerator(Gdx.files.internal("data/fonts/pixeboy.ttf"));
 		batch = new SpriteBatch();
