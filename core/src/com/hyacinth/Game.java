@@ -7,12 +7,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.math.Matrix4;
+import com.hyacinth.scenes.Complete;
 import com.hyacinth.scenes.LevelSelect;
 import com.hyacinth.scenes.PlayingLevel;
 import com.hyacinth.scenes.Title;
@@ -33,6 +35,8 @@ public class Game extends ApplicationAdapter {
 	private LevelSelect levelSelect;
 	private Music mainMusic;
 	private Texture bg, controlScheme;
+	private Complete complete;
+	private BitmapFont font;
 
 	@Override
 	public void create () {
@@ -48,6 +52,10 @@ public class Game extends ApplicationAdapter {
 		mainMusic = audio.newMusic(Gdx.files.internal("data/sound/Chucky Chease Beats.mp3"));
 		mainMusic.setLooping(true);
 		mainMusic.setVolume(.2f);
+		complete = new Complete();
+		FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		param.size = 18;
+		font = generator.generateFont(param);
 
 		title = new Title(generator);
 		cursor = new Texture(Gdx.files.internal("data/textures/cursor.png"));
@@ -91,8 +99,9 @@ public class Game extends ApplicationAdapter {
 			bgbatch.begin();
 			bgbatch.draw(bg, 0, 0, 1024, 576);
 			bgbatch.end();
-			int status = levels[level].render(camera, renderer);
+			int status = levels[level].render(camera, renderer, level);
 			if(status > 0){
+				levels[level].setEndTime(System.currentTimeMillis());
 				state = GameState.COMPLETE;
 			}else if(status < 0){
 				state = GameState.DEATH;
@@ -103,6 +112,7 @@ public class Game extends ApplicationAdapter {
 			state = GameState.GAME;
 		} else if (state == GameState.COMPLETE) {
 			//TODO: complete screen
+			complete.render(levels[level], font, batch, level);
 			if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) state = GameState.LEVEL_SELECT;
 		} else if (state == GameState.CONTROLS) {
 			batch.begin();
