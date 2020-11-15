@@ -46,7 +46,7 @@ public class Gun {
                 //then make the bullet for real
                 this.bullets.add(new Bullet(this.world,
                         (thisDirection).scl(-1),
-                        new Vector2(position).add(thisDirection.nor().scl(Constants.PLAYER_RADIUS)), camera));
+                        new Vector2(position).add(thisDirection.nor().scl(2 * Constants.PLAYER_RADIUS)), camera));
             }
             clip--;
             fireTimer = firerate;
