@@ -57,7 +57,7 @@ public class Gun {
     public void update(){
         //System.out.println(reloadTimer + "///" + clip);
         if(clip == 0 && reloadTimer <= 0){
-            reloadTimer = (int)Math.ceil(Gdx.graphics.getFramesPerSecond() * reloadTime);
+            reloadTimer = (int)Math.ceil(Constants.FRAMERATE * reloadTime);
         }
         if(reloadTimer > 0){
             reloadTimer--;

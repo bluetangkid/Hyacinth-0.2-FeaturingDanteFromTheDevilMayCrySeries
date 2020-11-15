@@ -89,7 +89,7 @@ public class Game extends ApplicationAdapter {
 			bgbatch.draw(bg, -1280/(1.2f*2), -720/(1.2f*2), 1280/1.2f, 720/1.2f);
 			bgbatch.end();
 			int selection = levelSelect.draw(camera);
-			if (selection > 0){
+			if (selection >= 0){
 				level = selection;
 				state = GameState.GAME;
 				mainMusic.play();
@@ -98,9 +98,16 @@ public class Game extends ApplicationAdapter {
 			bgbatch.begin();
 			bgbatch.draw(bg, 0, 0, 1024, 576);
 			bgbatch.end();
-			if(levels[level].render(camera, renderer) != 0){
+			int status = levels[level].render(camera, renderer);
+			if(status > 0){
 				state = GameState.COMPLETE;
+			}else if(status < 0){
+				levels[level].reset();
+				state = GameState.DEATH;
 			}
+		} else if(state == GameState.DEATH) {
+			//TODO: death screen
+			state = GameState.GAME;
 		} else if (state == GameState.COMPLETE) {
 			//TODO: complete screen
 			state = GameState.LEVEL_SELECT;
