@@ -52,6 +52,7 @@ public class Game extends ApplicationAdapter {
 		mainMusic = audio.newMusic(Gdx.files.internal("data/sound/Chucky Chease Beats.mp3"));
 		mainMusic.setLooping(true);
 		mainMusic.setVolume(.2f);
+		mainMusic.play();
 		complete = new Complete();
 		FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		param.size = 18;
@@ -93,7 +94,6 @@ public class Game extends ApplicationAdapter {
 				level = selection;
 				levels[level].reset();
 				state = GameState.GAME;
-				mainMusic.play();
 			}
 		} else if(state == GameState.GAME){
 			bgbatch.begin();
