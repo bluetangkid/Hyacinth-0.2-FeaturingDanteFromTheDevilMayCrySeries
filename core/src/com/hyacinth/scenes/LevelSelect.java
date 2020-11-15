@@ -30,6 +30,9 @@ public class LevelSelect {
     }
 
     public int draw(Camera c) {
+        c.position.x = 0;
+        c.position.y = 0;
+        c.position.z = 0;
         spriteCranberry.begin();
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 6; j++){

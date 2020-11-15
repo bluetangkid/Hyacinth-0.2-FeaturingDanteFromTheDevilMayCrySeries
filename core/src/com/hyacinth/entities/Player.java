@@ -1,7 +1,9 @@
 package com.hyacinth.entities;
 
+import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -31,6 +33,7 @@ public class Player extends DynamicEntity {
     boolean direction;
     Body lArm, rArm;
     OrthographicCamera camera;
+    Sound gunshot, grunt;
 
     public Player(World world, Vector2 spawn, int tileWidth, OrthographicCamera camera){
         super(world, Constants.PLAYER_RESTITUTION, Constants.PLAYER_RADIUS, Constants.PLAYER_DENSITY, Constants.PLAYER_FRICTION, spawn);
@@ -49,6 +52,9 @@ public class Player extends DynamicEntity {
         mass.mass = 0;
         groundCheck.setMassData(mass);
         groundCheck.createFixture(fixtureDef);
+
+        gunshot = Gdx.audio.newSound(Gdx.files.internal("data/sound/bang 2.mp3"));
+        grunt = Gdx.audio.newSound(Gdx.files.internal("data/sound/grunt.mp3"));
 
         Vector2 bodyPos = this.getBody().getPosition();
         BodyDef lArmDef = new BodyDef();
@@ -110,7 +116,7 @@ public class Player extends DynamicEntity {
         Vector2 pos = this.getBody().getPosition();
         TextureRegion curFrame = idle.getKeyFrame(animTime);
 
-        groundCheck.setTransform(pos.x, pos.y - (Constants.PLAYER_RADIUS) + 18, 0);
+        groundCheck.setTransform(pos.x, pos.y - (Constants.PLAYER_RADIUS) + 8, 0);
         lArm.setTransform(pos.x - Constants.PLAYER_RADIUS - Constants.PLAYER_RADIUS/3, pos.y, 0);
         rArm.setTransform(pos.x + Constants.PLAYER_RADIUS + Constants.PLAYER_RADIUS/3, pos.y, 0);
         if((Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) && this.getBody().getLinearVelocity().x > -Constants.PLAYER_MAX_SPEED){
@@ -156,7 +162,8 @@ public class Player extends DynamicEntity {
         }
         //System.out.println(this.onGround);
         if((Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.W)) && this.onGround > 0 && this.jumpTimer == 0){
-            this.getBody().setTransform(pos.x, pos.y + 1, 0);
+            grunt.play(0.1f);
+            this.getBody().setTransform(pos.x, pos.y + 2, 0);
             this.getBody().applyLinearImpulse(0, Constants.PLAYER_JUMP_FORCE*5000, pos.x, pos.y, true);
             this.jumpTimer = Constants.PLAYER_JUMP_TIMER;
             curFrame = jump.getKeyFrame(animTime);
@@ -170,6 +177,7 @@ public class Player extends DynamicEntity {
             this.getBody().applyLinearImpulse(0, -Constants.PLAYER_FASTFALL_SPEED*Constants.PLAYER_IMPULSE_MUL, pos.x, pos.y, true);
         }
         if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && !(this.gun == null)){
+            gunshot.play(0.05f, 2, 0);
             Vector2 gunForce = this.gun.fireGun(new Vector2(Gdx.input.getX() - (float)Gdx.graphics.getWidth()/2, Gdx.input.getY() - (float)Gdx.graphics.getHeight()/2), this.getBody().getPosition(), camera).scl(Constants.GUN_FORCE_STATIC_MULT);
             //System.out.println((Gdx.input.getX() - Gdx.graphics.getWidth()/2) + " " + (Gdx.input.getY() - Gdx.graphics.getHeight()/2));
             this.getBody().applyLinearImpulse(gunForce.x, gunForce.y, pos.x, pos.y, true);
@@ -184,12 +192,9 @@ public class Player extends DynamicEntity {
                 }
             }
         }
-        //System.out.println(onGround);
         if(this.jumpTimer > 0) jumpTimer--;
         this.gun.update();
         if(onGround < 1) {
-            if(state == PlayerState.RUNNING_LEFT){
-            }
             curFrame = jump.getKeyFrame(animTime);
             if(state != PlayerState.JUMPING) {
                 animTime = animSpeed;
