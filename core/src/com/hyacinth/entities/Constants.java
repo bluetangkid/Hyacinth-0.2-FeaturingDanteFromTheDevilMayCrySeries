@@ -18,10 +18,10 @@ public class Constants {
 
     public static final float GRAVITY = 10f;
 
-    public static final float BULLET_DENSITY = 0.5f;
+    public static final float BULLET_DENSITY = 0.2f;
     public static final float BULLET_RADIUS = 0.5f;
-    public static final float BULLET_FRICTION = 0.3f;
-    public static final float BULLET_RESTITUTION = 0.9f;
-    public static final int   BULLET_MAX_TIME = 240;
+    public static final float BULLET_FRICTION = 0.9f;
+    public static final float BULLET_RESTITUTION = 0.15f;
+    public static final float BULLET_MIN_VELOCITY = .1f;
     public static final float BULLET_SPEED_SCALE = 100f;
 }

@@ -26,11 +26,12 @@ import com.hyacinth.entities.Player;
 import com.hyacinth.scenes.LevelSelect;
 import com.hyacinth.scenes.PlayingLevel;
 import com.hyacinth.scenes.Title;
+import org.graalvm.compiler.lir.amd64.AMD64Binary;
 
 import java.util.ArrayList;
 
 public class Game extends ApplicationAdapter {
-	private SpriteBatch batch;
+	private SpriteBatch batch, bgbatch;
 	private OrthographicCamera camera;
 	private AssetManager assetManager;
 	private int tileWidth, tileHeight, mapWidthInTiles, mapHeightInTiles, mapWidthInPixels, mapHeightInPixels;
@@ -44,47 +45,59 @@ public class Game extends ApplicationAdapter {
 	private TiledRenderer renderer;
 	private LevelSelect levelSelect;
 	private Music mainMusic;
+	private Texture bg;
 
 	@Override
 	public void create () {
 		state = GameState.TITLE;
-		generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/pixeboy.ttf"));
+		generator = new FreeTypeFontGenerator(Gdx.files.internal("data/fonts/pixeboy.ttf"));
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera(1280/1.2f, 720/1.2f);//changing these values is just zooming in/out
 
 		audio = Gdx.audio;
-		mainMusic = audio.newMusic(Gdx.files.internal("sound/Chucky Chease Beats.mp3"));
+		mainMusic = audio.newMusic(Gdx.files.internal("data/sound/Chucky Chease Beats.mp3"));
 		mainMusic.setLooping(true);
 		mainMusic.setVolume(.2f);
-		mainMusic.play();
 
 		title = new Title(generator);
-		cursor = new Texture(Gdx.files.internal("textures/cursor.png"));
-		levels = new PlayingLevel[(int)Gdx.files.internal("core/assets/levels/").list().length];
+		cursor = new Texture(Gdx.files.internal("data/textures/cursor.png"));
+		levels = new PlayingLevel[(int)Gdx.files.internal("core/assets/data/levels/").list().length];
 		for (int i = 0; i < levels.length; i++){
-			levels[i] = new PlayingLevel(loadMap("levels/level_" + i + ".tmx"));
+			levels[i] = new PlayingLevel(loadMap("data/levels/level_" + i + ".tmx"), camera);
 		}
 		renderer = new TiledRenderer();
 		levelSelect = new LevelSelect(generator, levels);
+		bg = new Texture(Gdx.files.internal("data/textures/bg.png"));
+		bgbatch = new SpriteBatch();
 	}
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(.3f, 0.3f, 0.3f, 1);
+		Gdx.gl.glClearColor(.1f, 0.35f, 0.43f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 		camera.update();
+		bgbatch.setProjectionMatrix(camera.combined);
 		if(state == GameState.TITLE) {
+			bgbatch.begin();
+			bgbatch.draw(bg, -1280/(1.2f*2), -720/(1.2f*2), 1280/1.2f, 720/1.2f);
+			bgbatch.end();
 			if (title.draw(camera)) {
 				state = GameState.LEVEL_SELECT;
 			}
 		} else if(state == GameState.LEVEL_SELECT){
+			bgbatch.begin();
+			bgbatch.draw(bg, -1280/(1.2f*2), -720/(1.2f*2), 1280/1.2f, 720/1.2f);
+			bgbatch.end();
 			int selection = levelSelect.draw(camera);
 			if (selection > 0){
 				level = selection;
 				state = GameState.GAME;
+				mainMusic.play();
 			}
 		} else if(state == GameState.GAME){
+			bgbatch.begin();
+			bgbatch.draw(bg, 0, 0, 1024, 576);
+			bgbatch.end();
 			levels[0].render(camera, renderer);
 		}
 		batch.begin();
