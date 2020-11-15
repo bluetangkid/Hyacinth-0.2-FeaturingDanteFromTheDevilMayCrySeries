@@ -24,7 +24,7 @@ public class Gun {
         this.clip = this.clipSize;
         this.reloadTimer = 0;
         this.reloadTime = reloadTime;
-        this.firerate = firerate;
+        this.firerate = (int)Math.ceil(firerate * Gdx.graphics.getDisplayMode().refreshRate / 60);
         this.bullets = new ArrayList<>();
         this.fireTimer = 0;
     }
@@ -57,7 +57,7 @@ public class Gun {
     public void update(){
         //System.out.println(reloadTimer + "///" + clip);
         if(clip == 0 && reloadTimer <= 0){
-            reloadTimer = (int)Math.ceil(Gdx.graphics.getFramesPerSecond() * reloadTime);
+            reloadTimer = (int)Math.ceil(Gdx.graphics.getDisplayMode().refreshRate * reloadTime);
         }
         if(reloadTimer > 0){
             reloadTimer--;

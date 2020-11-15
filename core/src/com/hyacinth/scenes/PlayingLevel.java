@@ -17,6 +17,8 @@ import com.badlogic.gdx.utils.Array;
 import com.hyacinth.Game;
 import com.hyacinth.entities.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 public class PlayingLevel {
@@ -29,9 +31,11 @@ public class PlayingLevel {
     private Player player;
     private long time;
     private OrthographicCamera camera;
+    private boolean spikes;
 
     public PlayingLevel(TiledMap map, OrthographicCamera camera){
         this.camera = camera;
+        this.spikes = false;
         initialize(map); // so that we can reset
     }
     public void initialize(TiledMap map){
@@ -89,6 +93,10 @@ public class PlayingLevel {
         doPhysicsStep(System.currentTimeMillis() - time);
         mapRenderer.setView(camera);
         mapRenderer.render();
+        if(spikes){
+            levelComplete--;
+            spikes = false;
+        }
         return levelComplete;
     }
 
@@ -122,6 +130,7 @@ public class PlayingLevel {
                     def.isSensor = (mapLayer.getCell(i, j).getTile().getId() != 1);
                     def.friction = 0.1f;
                     body.setTransform(getTransformedCenterForRectangle(rectangle), 0);
+                    body.setUserData(mapLayer.getCell(i, j).getTile().getId());
                     body.createFixture(def);
                 }
             }
@@ -133,10 +142,10 @@ public class PlayingLevel {
         for(int i = 0; i < objects.getCount(); i++){
             MapObject curObject = objects.get(i);
             MapProperties properties = curObject.getProperties();
-            Iterator<String> test = properties.getKeys();
-            while(test.hasNext()){
-                System.out.println(test.next());
-            }
+            //Iterator<String> test = properties.getKeys();
+            //while(test.hasNext()){
+            //    System.out.println(test.next());
+            //}
             float x = 0, y = 0, width = 0, height = 0;
             if(properties.containsKey("x")){
                 x = (float)properties.get("x");
@@ -218,6 +227,7 @@ public class PlayingLevel {
     public void reset(){
         this.initialize(map);
     }
+    public void hitSpikes() { this.spikes = true; }
 }
 
 class GroundListener implements ContactListener {
@@ -251,6 +261,10 @@ class GroundListener implements ContactListener {
         }else if(isPlayer(contact.getFixtureB()) && isStaticEntity(contact.getFixtureA())){
             world.playerRemoveCollidingWithEntity((StaticEntity)contact.getFixtureA().getBody().getUserData());
         }
+        if((isPlayer(contact.getFixtureA()) && isSpike(contact.getFixtureB())) || (isPlayer(contact.getFixtureB()) && isSpike(contact.getFixtureA()))){
+            //System.out.println("Spike collision!");
+            world.hitSpikes();
+        }
     }
 
     @Override
@@ -270,6 +284,16 @@ class GroundListener implements ContactListener {
     private boolean isStaticEntity(Fixture fixture){
         return fixture.getBody().getUserData() != null &&
                 fixture.getBody().getUserData() instanceof StaticEntity;
+    }
+    private boolean isSpike(Fixture fixture){
+        int[] spikez = {11, 16, 18, 23};
+        ArrayList<Integer> spikes = new ArrayList<>();
+        for(int i = 0; i < spikez.length; i++){
+            spikes.add(spikez[i]);
+        }
+        return fixture.getBody().getUserData() != null &&
+                fixture.getBody().getUserData() instanceof Integer &&
+                spikes.contains(fixture.getBody().getUserData());
     }
 }
 class BulletFilter implements ContactFilter {
