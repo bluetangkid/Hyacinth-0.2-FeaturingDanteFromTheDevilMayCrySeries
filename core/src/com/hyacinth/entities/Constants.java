@@ -1,7 +1,5 @@
 package com.hyacinth.entities;
 
-import com.badlogic.gdx.Gdx;
-
 public class Constants {
     public static int   MAGIC_NUMBER = 7; // @taro
 

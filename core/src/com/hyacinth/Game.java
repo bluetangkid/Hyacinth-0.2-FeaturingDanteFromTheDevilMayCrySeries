@@ -11,26 +11,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.MapObjects;
-import com.badlogic.gdx.maps.MapProperties;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.*;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.Array;
-import com.hyacinth.entities.Constants;
-import com.hyacinth.entities.DynamicEntity;
-import com.hyacinth.entities.Player;
 import com.hyacinth.scenes.LevelSelect;
 import com.hyacinth.scenes.PlayingLevel;
 import com.hyacinth.scenes.Title;
-//import org.graalvm.compiler.lir.amd64.AMD64Binary;
-
-import java.util.ArrayList;
 
 public class Game extends ApplicationAdapter {
 	private SpriteBatch batch, bgbatch;
@@ -128,7 +113,7 @@ public class Game extends ApplicationAdapter {
 		batch.end();
 	}
 
-	private TiledMap loadMap(String map){//TODO change this to load all maps in /levels
+	private TiledMap loadMap(String map){
 		assetManager = new AssetManager();
 		assetManager.setLoader(TiledMap.class, new TmxMapLoader());
 		assetManager.load(map, TiledMap.class);

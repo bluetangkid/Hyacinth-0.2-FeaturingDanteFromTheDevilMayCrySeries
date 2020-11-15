@@ -1,10 +1,8 @@
 package com.hyacinth.entities;
 
-import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -244,9 +242,6 @@ public class Player extends DynamicEntity {
     }
     public void removeCollidingEntity(StaticEntity entity){
         collidingEntities.remove(entity);
-    }
-    public void resetCollidingEntity(){
-        collidingEntities = new ArrayList<>();
     }
 
     public void createGun(int bulletCount, float bulletSpread, float bulletForce, int clipSize, float reloadTime, int firerate){
