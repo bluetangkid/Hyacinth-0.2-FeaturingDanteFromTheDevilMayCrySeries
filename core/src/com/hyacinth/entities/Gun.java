@@ -1,5 +1,6 @@
 package com.hyacinth.entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -22,7 +23,7 @@ public class Gun {
         this.clip = this.clipSize;
         this.reloadTimer = 0;
         this.reloadTime = reloadTime;
-        this.firerate = firerate;
+        this.firerate = firerate * (Gdx.graphics.getFramesPerSecond()/60);
         this.bullets = new ArrayList<>();
         this.fireTimer = 0;
     }
@@ -55,7 +56,7 @@ public class Gun {
     public void update(){
         //System.out.println(reloadTimer + "///" + clip);
         if(clip == 0 && reloadTimer <= 0){
-            reloadTimer = (int)Math.ceil(Constants.FRAMERATE * reloadTime);
+            reloadTimer = (int)Math.ceil(Gdx.graphics.getFramesPerSecond() * reloadTime);
         }
         if(reloadTimer > 0){
             reloadTimer--;

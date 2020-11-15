@@ -98,7 +98,7 @@ public class Game extends ApplicationAdapter {
 				state = GameState.DEATH;
 			}
 		} else if(state == GameState.DEATH) {
-			//TODO: death screen
+			//TO.DO: death screen not needed
 			levels[level].reset();
 			state = GameState.GAME;
 		} else if (state == GameState.COMPLETE) {
