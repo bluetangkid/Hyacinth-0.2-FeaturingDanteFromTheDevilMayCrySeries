@@ -53,7 +53,6 @@ public class Game extends ApplicationAdapter {
 		generator = new FreeTypeFontGenerator(Gdx.files.internal("data/fonts/pixeboy.ttf"));
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera(1280/1.2f, 720/1.2f);//changing these values is just zooming in/out
-
 		audio = Gdx.audio;
 		mainMusic = audio.newMusic(Gdx.files.internal("data/sound/Chucky Chease Beats.mp3"));
 		mainMusic.setLooping(true);

@@ -101,9 +101,7 @@ public class PlayingLevel {
         camera.position.x = playerPosition.x;
         camera.position.y = playerPosition.y;
         //debugRenderer.render(world, camera.combined);
-        doPhysicsStep(System.currentTimeMillis() - time);
-        mapRenderer.setView(camera);
-        mapRenderer.render();
+
         if(spikes){
             levelComplete--;
             spikes = false;
