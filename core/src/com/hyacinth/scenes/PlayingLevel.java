@@ -100,7 +100,7 @@ public class PlayingLevel {
         camera.position.x = playerPosition.x;
         camera.position.y = playerPosition.y;
         ui.render(player);
-        debugRenderer.render(world, camera.combined);
+        //debugRenderer.render(world, camera.combined);
 
         if(spikes){
             levelComplete--;
@@ -260,9 +260,8 @@ class Ui {
 
     void render(Player player) {
         int timeLeft = player.getGun().getReloadTime();
-
         String data = name + "\n" + player.getGun().getBullets() + "/" + (int)magSize + " Bullets\n" +
-                (98-Math.round(100f*(timeLeft/60f/reloadTime))) + "% Reloaded";
+                Math.min(102-Math.round(100f*(timeLeft/60f/reloadTime)), 100) + "% Reloaded";
         batch.begin();
         font.draw(batch, data, 20, 90);
         batch.end();

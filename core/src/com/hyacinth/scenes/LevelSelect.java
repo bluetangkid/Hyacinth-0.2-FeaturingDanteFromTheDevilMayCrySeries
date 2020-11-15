@@ -36,13 +36,15 @@ public class LevelSelect {
         c.position.x = 0;
         c.position.y = 0;
         c.position.z = 0;
+        spriteCranberry.setProjectionMatrix(c.combined);
         spriteCranberry.begin();
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 6; j++){
-                spriteCranberry.draw(button, j*150 + 1920/2 - 5*75 - 1280/20f, (4-i)*250 + 1080/2 - 6*125 - 720/20f, 1280/10f, 720/10f);
-                subTitleFont.draw(spriteCranberry, Integer.toString(i*6 + j + 1), j*150 + 1920/2 - 5*75 - 5, (4-i)*250 + 1080/2 - 6*125 + 5);
+                spriteCranberry.draw(button, j*120 - 5*60 - 32, (4-i)*150 - 6*75 - 32, 64, 64);
+                how.setText(subTitleFont, Integer.toString((2-i)*6 + j));
+                subTitleFont.draw(spriteCranberry, Integer.toString(i*6 + j + 1), j*120 - 5*60 - how.width/2, (4-i)*150 - 6*75 + 5);
                 if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
-                    if(Math.sqrt(Math.pow(Gdx.input.getX() - (j*150 + 1920/2  - 5*75), 2) + Math.pow(Gdx.input.getY() - ((4-i)*250 + 1080/2 - 6*125), 2)) < 80){
+                    if(Math.sqrt(Math.pow(-1280/2 + Gdx.input.getX()*1280/1920 - (j*120 - 5*60 - 32), 2) + Math.pow(-720/2 + Gdx.input.getY()*720/1080 - ((4-i)*150 - 6*75 - 32), 2)) < 80){
                         spriteCranberry.end();
                         return (2-i)*6 + j;
                     }

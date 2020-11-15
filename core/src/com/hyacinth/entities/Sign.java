@@ -25,7 +25,7 @@ public class Sign extends StaticEntity{
 
     public void displayText(){
         batch.begin();
-        font.draw(batch, text, 1280/(1.2f*2), 500);
+        font.draw(batch, text.replace(",", "\n"), 1280/(1.2f*2), 500);
         batch.end();
     }
 }
