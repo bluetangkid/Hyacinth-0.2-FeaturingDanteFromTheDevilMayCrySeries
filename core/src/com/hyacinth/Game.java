@@ -103,7 +103,7 @@ public class Game extends ApplicationAdapter {
 			state = GameState.GAME;
 		} else if (state == GameState.COMPLETE) {
 			//TODO: complete screen
-			state = GameState.LEVEL_SELECT;
+			if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) state = GameState.LEVEL_SELECT;
 		} else if (state == GameState.CONTROLS) {
 			batch.begin();
 			batch.draw(controlScheme, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

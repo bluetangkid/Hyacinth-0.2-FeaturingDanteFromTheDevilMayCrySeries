@@ -32,7 +32,7 @@ public class Button {
         font.draw(batch, text,pos.x - textLen/2, pos.y + tex.getHeight()*5);
         Vector2 mousePos = new Vector2(Gdx.input.getX(), Gdx.graphics.getDisplayMode().height - Gdx.input.getY());
         batch.end();
-        if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && mousePos.x - (pos.x - tex.getWidth()*2) > 0 && mousePos.x - (pos.x - tex.getWidth()*2) < tex.getWidth()*4 && mousePos.y - (pos.y + tex.getHeight()*2) > 0 && mousePos.y - (pos.y + tex.getHeight()*2) < tex.getHeight()*4){
+        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && mousePos.x - (pos.x - tex.getWidth()*2) > 0 && mousePos.x - (pos.x - tex.getWidth()*2) < tex.getWidth()*4 && mousePos.y - (pos.y + tex.getHeight()*2) > 0 && mousePos.y - (pos.y + tex.getHeight()*2) < tex.getHeight()*4){
             System.out.println(text);
             return true;
         }
