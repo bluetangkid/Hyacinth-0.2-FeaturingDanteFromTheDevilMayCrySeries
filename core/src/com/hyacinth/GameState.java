@@ -10,3 +10,15 @@ public enum GameState {
         return id;
     }
 }
+
+/*
+
+Credits:
+
+Warren Funk and Tyler Hempe - Programming
+Sam Taylor - Art
+Taro Sharkey - Music and SFX
+
+idk some shoutout to hackumbc here probably
+
+ */
