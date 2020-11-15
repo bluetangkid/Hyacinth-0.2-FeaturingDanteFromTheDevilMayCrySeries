@@ -112,7 +112,7 @@ public class PlayingLevel {
     }
 
     private void doPhysicsStep(float deltaTime) {
-        float frameTime = Math.min(deltaTime, 0.25f * 60f/Gdx.graphics.getDisplayMode().refreshRate);
+        float frameTime = Math.min(deltaTime, 0.25f);
         accumulator += frameTime;
         time = System.currentTimeMillis();
         while (accumulator >= timeStep) {

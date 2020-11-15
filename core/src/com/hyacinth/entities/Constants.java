@@ -17,6 +17,7 @@ public class Constants {
     public static final float PLAYER_FASTFALL_SPEED = 0.05f;
 
     public static final float GRAVITY = 10f;
+    public static final int   FRAMERATE = 60;
 
     public static final float BULLET_DENSITY = 0.2f;
     public static final float BULLET_RADIUS = 0.5f;
